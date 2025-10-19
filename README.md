@@ -127,12 +127,15 @@ Food-delivery-WebApp/
 │   │   │   └── FoodDeliveryApplication.java
 │   │   └── resources/
 │   │       ├── application.properties
-│   │       └── static/ (if needed)
+│   │       └── static/
+│   │           └── index.html   ← 🧠 Main frontend file served by Spring Boot
 │   └── test/
 │       └── java/ (unit tests)
+│
 ├── database/
 │   ├── schema.sql (database tables)
 │   └── sample-data.sql (initial data)
+│
 ├── frontend/
 │   ├── index.html
 │   ├── css/
@@ -145,8 +148,10 @@ Food-delivery-WebApp/
 │   │   └── cart.js
 │   └── assets/
 │       └── images/
+│
 ├── pom.xml (Maven dependencies)
 └── README.md
+
 ```
 
 ---
@@ -378,7 +383,7 @@ Started FoodDeliveryApplication in X.XXX seconds
 Navigate to the frontend directory:
 
 ```bash
-cd frontend
+cd index.html
 npm install
 npx serve
 ```
