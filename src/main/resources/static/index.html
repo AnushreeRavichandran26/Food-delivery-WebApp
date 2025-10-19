@@ -1,0 +1,1763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADS - Food Delivery System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        header {
+            background-color: #ff6b6b;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+        }
+
+        header .nav {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        header a {
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: opacity 0.3s;
+            padding: 8px 12px;
+            border-radius: 5px;
+        }
+
+        header a:hover {
+            opacity: 0.8;
+        }
+
+        header a.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            font-weight: 600;
+        }
+
+        header .cart-count {
+            background-color: white;
+            color: #ff6b6b;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .landing {
+            background: linear-gradient(135deg, #ff8c42 0%, #ffc4a1 100%);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .landing h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .landing h1 .highlight {
+            color: #ff6b6b;
+        }
+
+        .landing p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: #555;
+        }
+
+        .btn {
+            padding: 12px 40px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background-color: #ff6b6b;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #ff5252;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: #ff8c42;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #ff7a2a;
+        }
+
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .auth-form {
+            background: white;
+            padding: 50px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .auth-form h2 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .auth-form .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #ff6b6b;
+        }
+
+        .auth-form button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+        }
+
+        .auth-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .auth-link a {
+            color: #ff6b6b;
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .home {
+            padding: 30px;
+            min-height: 100vh;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 30px 0 20px 0;
+            text-align: center;
+        }
+
+        .restaurant-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .restaurant-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .restaurant-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        .restaurant-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .restaurant-info {
+            padding: 15px;
+        }
+
+        .restaurant-name {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .restaurant-rating {
+            font-size: 12px;
+            color: #ff6b6b;
+            margin-bottom: 8px;
+        }
+
+        .restaurant-cuisine {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .menu-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            z-index: 2000;
+            overflow-y: auto;
+            padding-top: 20px;
+        }
+
+        .menu-modal.hidden {
+            display: none;
+        }
+
+        .menu-content {
+            background: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            margin-bottom: 20px;
+        }
+
+        .menu-header {
+            background: #ff6b6b;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .menu-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        .menu-items {
+            padding: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .item-description {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .item-price {
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-left: 15px;
+        }
+
+        .qty-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .qty-control button {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ff6b6b;
+            background: white;
+            color: #ff6b6b;
+            cursor: pointer;
+            border-radius: 3px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .qty-control button:hover {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .qty-control span {
+            min-width: 30px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .cart-sidebar {
+            position: fixed;
+            right: -350px;
+            top: 0;
+            width: 350px;
+            height: 100vh;
+            background: white;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+            transition: right 0.3s;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .cart-sidebar.active {
+            right: 0;
+        }
+
+        .cart-header {
+            background-color: #ff6b6b;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .cart-items {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 10px;
+        }
+
+        .cart-item-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .cart-item-price {
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+
+        .cart-remove-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 3px 8px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .cart-footer {
+            padding: 20px;
+            border-top: 2px solid #eee;
+            background: white;
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .cart-footer button {
+            width: 100%;
+            padding: 12px;
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 30px 0;
+            color: #999;
+        }
+
+        .orders-container {
+            padding: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .order-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 15px;
+        }
+
+        .order-id {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .order-status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .status-pending {
+            background-color: #ffc107;
+        }
+
+        .status-confirmed {
+            background-color: #17a2b8;
+        }
+
+        .status-preparing {
+            background-color: #ff6b6b;
+        }
+
+        .status-out {
+            background-color: #fd7e14;
+        }
+
+        .status-delivered {
+            background-color: #28a745;
+        }
+
+        .order-details {
+            margin-bottom: 15px;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 14px;
+        }
+
+        .order-summary {
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+
+        .order-total {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .delivery-info {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .delivery-address {
+            margin-bottom: 10px;
+        }
+
+        .delivery-address label {
+            font-weight: bold;
+            color: #666;
+        }
+
+        .delivery-time {
+            margin-bottom: 10px;
+        }
+
+        .delivery-time label {
+            font-weight: bold;
+            color: #666;
+        }
+
+        .delivery-agent {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .agent-info {
+            flex: 1;
+        }
+
+        .agent-name {
+            font-weight: bold;
+        }
+
+        .agent-rating {
+            font-size: 12px;
+            color: #ff6b6b;
+        }
+
+        .agent-phone {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .checkout-container {
+            padding: 30px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .checkout-form {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .checkout-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .checkout-section {
+            margin-bottom: 25px;
+        }
+
+        .checkout-section h3 {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #ff6b6b;
+        }
+
+        .payment-method {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .payment-option {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .payment-option:hover {
+            border-color: #ff6b6b;
+        }
+
+        .payment-option.selected {
+            border-color: #ff6b6b;
+            background: #fff5f5;
+        }
+
+        .order-summary-box {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            font-size: 16px;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+
+        .modal.hidden {
+            display: none;
+        }
+
+        .success-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 3000;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .success-modal h2 {
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+
+        .success-modal p {
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+        }
+
+        .profile-container {
+            padding: 30px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6b6b, #ff8c42);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: white;
+            font-weight: bold;
+            margin: 0 auto 15px;
+        }
+
+        .profile-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .profile-email {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .profile-section {
+            margin-bottom: 25px;
+        }
+
+        .profile-section h3 {
+            font-size: 16px;
+            color: #ff6b6b;
+            margin-bottom: 15px;
+        }
+
+        .profile-field {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .profile-field label {
+            font-weight: 600;
+            color: #666;
+        }
+
+        .profile-field span {
+            color: #333;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .profile-actions button {
+            flex: 1;
+        }
+
+        .edit-mode .profile-field span {
+            display: none;
+        }
+
+        .edit-mode .profile-field input {
+            display: block;
+        }
+
+        .profile-field input {
+            display: none;
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .profile-field input:focus {
+            outline: none;
+            border-color: #ff6b6b;
+        }
+
+        @media (max-width: 768px) {
+            .restaurant-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+
+            .cart-sidebar {
+                width: 100%;
+                right: -100%;
+            }
+
+            header .nav {
+                gap: 10px;
+                font-size: 14px;
+            }
+
+            .menu-content {
+                width: 95%;
+            }
+
+            .checkout-container {
+                padding: 15px;
+            }
+
+            .checkout-form {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="landing" class="landing">
+    <h1>Welcome to <span class="highlight">ADS</span></h1>
+    <p>Your favorite meals, delivered fast and fresh</p>
+    <button class="btn btn-primary" onclick="appInstance.goToLogin()">Explore Restaurants</button>
+</div>
+
+<div id="login" class="auth-container hidden">
+    <div class="auth-form">
+        <h2>Welcome Back</h2>
+        <p class="subtitle">Login to continue ordering</p>
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="loginEmail" placeholder="Enter your email">
+        </div>
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="loginPassword" placeholder="Enter your password">
+        </div>
+        <button class="btn btn-primary" onclick="appInstance.handleLogin()">Login</button>
+        <div class="auth-link">
+            Don't have an account? <a onclick="appInstance.showSignup()">Sign up</a>
+        </div>
+    </div>
+</div>
+
+<div id="signup" class="auth-container hidden">
+    <div class="auth-form">
+        <h2>Create Account</h2>
+        <p class="subtitle">Join and start ordering now</p>
+        <div class="form-group">
+            <label>Name</label>
+            <input type="text" id="signupName" placeholder="Enter your name">
+        </div>
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="signupEmail" placeholder="Enter your email">
+        </div>
+        <div class="form-group">
+            <label>Phone</label>
+            <input type="tel" id="signupPhone" placeholder="Enter your phone">
+        </div>
+        <div class="form-group">
+            <label>Address</label>
+            <input type="text" id="signupAddress" placeholder="Enter your address">
+        </div>
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="signupPassword" placeholder="Enter your password">
+        </div>
+        <button class="btn btn-secondary" onclick="appInstance.handleSignup()">Sign Up</button>
+        <div class="auth-link">
+            Already have an account? <a onclick="appInstance.showLogin()">Login</a>
+        </div>
+    </div>
+</div>
+
+<div id="home" class="hidden">
+    <header>
+        <div class="logo">ADS</div>
+        <div class="nav">
+            <a id="navHome" onclick="appInstance.showHome()">Home</a>
+            <a id="navOrders" onclick="appInstance.showOrders()">My Orders</a>
+            <a id="navProfile" onclick="appInstance.showProfile()">Profile</a>
+            <a onclick="appInstance.toggleCart()">Cart <span class="cart-count" id="cartCount">0</span></a>
+            <a onclick="appInstance.logout()">Logout</a>
+        </div>
+    </header>
+
+    <div class="home">
+        <div class="section-title">Popular Restaurants</div>
+        <div class="restaurant-grid" id="restaurantGrid"><div class="loading">Loading restaurants...</div></div>
+    </div>
+</div>
+
+<div id="orders" class="hidden">
+    <header>
+        <div class="logo">ADS</div>
+        <div class="nav">
+            <a id="navHome2" onclick="appInstance.showHome()">Home</a>
+            <a id="navOrders2" onclick="appInstance.showOrders()">My Orders</a>
+            <a id="navProfile2" onclick="appInstance.showProfile()">Profile</a>
+            <a onclick="appInstance.toggleCart()">Cart <span class="cart-count" id="cartCount2">0</span></a>
+            <a onclick="appInstance.logout()">Logout</a>
+        </div>
+    </header>
+
+    <div class="orders-container">
+        <h2 style="margin-bottom: 30px;">Your Orders</h2>
+        <div id="ordersListContainer"><div class="loading">Loading orders...</div></div>
+    </div>
+</div>
+
+<div id="profile" class="hidden">
+    <header>
+        <div class="logo">ADS</div>
+        <div class="nav">
+            <a id="navHome4" onclick="appInstance.showHome()">Home</a>
+            <a id="navOrders4" onclick="appInstance.showOrders()">My Orders</a>
+            <a id="navProfile4" onclick="appInstance.showProfile()">Profile</a>
+            <a onclick="appInstance.toggleCart()">Cart <span class="cart-count" id="cartCount4">0</span></a>
+            <a onclick="appInstance.logout()">Logout</a>
+        </div>
+    </header>
+
+    <div class="profile-container">
+        <div class="profile-card" id="profileCard">
+            <div class="profile-header">
+                <div class="profile-avatar" id="profileAvatar">A</div>
+                <div class="profile-name" id="profileName">User Name</div>
+                <div class="profile-email" id="profileEmail">user@example.com</div>
+            </div>
+
+            <div class="profile-section">
+                <h3>Personal Information</h3>
+                <div class="profile-field">
+                    <label>Name:</label>
+                    <span id="displayName">-</span>
+                    <input type="text" id="editName" placeholder="Enter name">
+                </div>
+                <div class="profile-field">
+                    <label>Email:</label>
+                    <span id="displayEmail">-</span>
+                    <input type="email" id="editEmail" placeholder="Enter email">
+                </div>
+                <div class="profile-field">
+                    <label>Phone:</label>
+                    <span id="displayPhone">-</span>
+                    <input type="tel" id="editPhone" placeholder="Enter phone">
+                </div>
+                <div class="profile-field">
+                    <label>Address:</label>
+                    <span id="displayAddress">-</span>
+                    <input type="text" id="editAddress" placeholder="Enter address">
+                </div>
+            </div>
+
+            <div class="profile-section">
+                <h3>Account Statistics</h3>
+                <div class="profile-field">
+                    <label>Total Orders:</label>
+                    <span id="totalOrders">0</span>
+                </div>
+                <div class="profile-field">
+                    <label>Member Since:</label>
+                    <span id="memberSince">-</span>
+                </div>
+            </div>
+
+            <div class="profile-actions">
+                <button class="btn btn-primary" id="editBtn" onclick="appInstance.toggleEditMode()">Edit Profile</button>
+                <button class="btn btn-secondary" id="saveBtn" onclick="appInstance.saveProfile()" style="display: none;">Save Changes</button>
+                <button class="btn" id="cancelBtn" onclick="appInstance.cancelEdit()" style="background-color: #ddd; color: #333; display: none;">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="checkout" class="hidden">
+    <header>
+        <div class="logo">ADS</div>
+        <div class="nav">
+            <a onclick="appInstance.showHome()">Home</a>
+            <a onclick="appInstance.showOrders()">My Orders</a>
+            <a onclick="appInstance.showProfile()">Profile</a>
+            <a onclick="appInstance.toggleCart()">Cart <span class="cart-count" id="cartCount3">0</span></a>
+            <a onclick="appInstance.logout()">Logout</a>
+        </div>
+    </header>
+
+    <div class="checkout-container">
+        <div class="checkout-form" style="text-align:center;">
+            <h2 style="margin-bottom:20px;">Complete Your Order</h2>
+
+            <h3 style="color:#ff6b6b; text-align:left;">Payment Method</h3>
+            <div class="payment-method">
+                <div class="payment-option" onclick="appInstance.selectPayment('card')">Credit/Debit Card</div>
+                <div class="payment-option" onclick="appInstance.selectPayment('upi')">UPI Payment</div>
+                <div class="payment-option" onclick="appInstance.selectPayment('cod')">Cash on Delivery</div>
+            </div>
+
+            <!-- Card Details -->
+            <div id="cardDetails" class="hidden" style="margin-top:15px; text-align:left;">
+                <div class="form-group">
+                    <label>Card Number</label>
+                    <input type="text" id="cardNumber" placeholder="XXXX XXXX XXXX XXXX" maxlength="19">
+                </div>
+                <div style="display:flex; gap:10px;">
+                    <div class="form-group" style="flex:1;">
+                        <label>Expiry Date</label>
+                        <input type="text" id="cardExpiry" placeholder="MM/YY" maxlength="5">
+                    </div>
+                    <div class="form-group" style="flex:1;">
+                        <label>CVV</label>
+                        <input type="password" id="cardCVV" placeholder="***" maxlength="3">
+                    </div>
+                </div>
+            </div>
+
+            <!-- UPI Details -->
+            <div id="upiDetails" class="hidden" style="margin-top:15px; text-align:left;">
+                <div class="form-group">
+                    <label>UPI ID</label>
+                    <input type="text" id="upiId" placeholder="example@upi">
+                </div>
+            </div>
+
+            <h3 style="color:#ff6b6b; margin-top:25px; text-align:left;">Delivery Address</h3>
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="deliveryName" placeholder="Enter full name">
+            </div>
+            <div class="form-group">
+                <label>Phone Number</label>
+                <input type="tel" id="deliveryPhone" placeholder="Enter phone number">
+            </div>
+            <div class="form-group">
+                <label>Address</label>
+                <textarea id="deliveryAddress" placeholder="Enter delivery address" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:5px;"></textarea>
+            </div>
+            <div class="form-group">
+                <label>City</label>
+                <input type="text" id="deliveryCity" placeholder="Enter city">
+            </div>
+
+            <div class="order-summary-box" style="margin-top:20px;">
+                <div class="summary-row">
+                    <span>Subtotal:</span><span id="subtotal">0</span>
+                </div>
+                <div class="summary-row">
+                    <span>Delivery Fee:</span><span>50</span>
+                </div>
+                <div class="summary-row">
+                    <span>Tax (5%):</span><span id="tax">0</span>
+                </div>
+                <div class="summary-total">
+                    <span>Total Amount:</span><span id="totalAmount">0</span>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" style="width:100%; padding:15px;" onclick="appInstance.processPayment()">Complete Payment</button>
+            <button class="btn" style="width:100%; padding:15px; background-color:#ddd; color:#333; margin-top:10px;" onclick="appInstance.showHome()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+
+<div id="menuModal" class="menu-modal hidden">
+    <div class="menu-content">
+        <div class="menu-header">
+            <h2 id="restaurantMenuName"></h2>
+            <button class="menu-close" onclick="appInstance.closeMenu()">×</button>
+        </div>
+        <div class="menu-items" id="menuItemsContainer"><div class="loading">Loading menu...</div></div>
+    </div>
+</div>
+
+<div id="cartSidebar" class="cart-sidebar">
+    <div class="cart-header">
+        <span>Your Cart</span>
+        <button class="close-btn" onclick="appInstance.toggleCart()">×</button>
+    </div>
+    <div class="cart-items" id="cartItems">
+        <div class="empty-cart">Your cart is empty</div>
+    </div>
+    <div class="cart-footer">
+        <div class="cart-total">
+            <span>Total:</span>
+            <span id="cartTotal">0</span>
+        </div>
+        <button class="btn btn-primary" id="checkoutBtn" onclick="appInstance.goToCheckout()" style="width: 100%;">Proceed to Checkout</button>
+    </div>
+</div>
+
+<div id="overlay" class="modal hidden" onclick="appInstance.toggleCart()"></div>
+
+<div id="successModal" class="success-modal hidden">
+    <h2>Order Placed Successfully!</h2>
+    <p>Your order has been confirmed</p>
+    <p id="orderConfirmation" style="font-weight: bold; color: #ff6b6b;"></p>
+    <button class="btn btn-primary" onclick="appInstance.handleSuccessOrder()" style="margin-top: 20px; width: 100%;">View Order Status</button>
+</div>
+
+<script>
+    const API_BASE_URL = "http://localhost:8080/api";
+
+    class FoodDeliveryApp {
+        constructor() {
+            this.cart = [];
+            this.isLoggedIn = false;
+            this.currentUser = null;
+            this.selectedPayment = null;
+            this.currentRestaurant = null;
+            this.menuItemQuantities = {};
+        }
+
+        async apiCall(endpoint, method = 'GET', data = null) {
+            const options = {
+                method,
+                headers: { 'Content-Type': 'application/json' }
+            };
+            if (data) options.body = JSON.stringify(data);
+            try {
+                const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                return await response.json();
+            } catch (error) {
+                console.error('API Error:', error);
+                throw error;
+            }
+        }
+
+        showPage(id) {
+            document.getElementById(id).classList.remove('hidden');
+            this.updateNavigation(id);
+        }
+
+        hidePage(id) { document.getElementById(id).classList.add('hidden'); }
+
+        updateNavigation(currentPage) {
+            // Remove active class from all nav links
+            document.querySelectorAll('header a[id^="nav"]').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // Add active class to current page
+            if (currentPage === 'home') {
+                document.getElementById('navHome')?.classList.add('active');
+                document.getElementById('navHome2')?.classList.add('active');
+                document.getElementById('navHome3')?.classList.add('active');
+                document.getElementById('navHome4')?.classList.add('active');
+            } else if (currentPage === 'orders') {
+                document.getElementById('navOrders')?.classList.add('active');
+                document.getElementById('navOrders2')?.classList.add('active');
+                document.getElementById('navOrders3')?.classList.add('active');
+                document.getElementById('navOrders4')?.classList.add('active');
+            } else if (currentPage === 'profile') {
+                document.getElementById('navProfile')?.classList.add('active');
+                document.getElementById('navProfile2')?.classList.add('active');
+                document.getElementById('navProfile3')?.classList.add('active');
+                document.getElementById('navProfile4')?.classList.add('active');
+            }
+        }
+
+        goToLogin() {
+            this.hidePage('landing');
+            this.showPage('login');
+        }
+
+        showLogin() {
+            this.hidePage('signup');
+            this.hidePage('home');
+            this.hidePage('orders');
+            this.hidePage('profile');
+            this.showPage('login');
+        }
+
+        showSignup() {
+            this.hidePage('login');
+            this.showPage('signup');
+        }
+
+        async handleLogin() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+
+            if (!email || !password) {
+                alert('Fill all fields');
+                return;
+            }
+
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address');
+                return;
+            }
+
+            try {
+                this.currentUser = await this.apiCall('/users/login', 'POST', { email, password });
+                localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+
+                this.isLoggedIn = true;
+                document.getElementById('loginEmail').value = '';
+                document.getElementById('loginPassword').value = '';
+                this.showHome();
+            } catch (e) {
+                alert('Login failed. Please check your credentials.');
+            }
+        }
+
+        async handleSignup() {
+            const name = document.getElementById('signupName').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const phone = document.getElementById('signupPhone').value.trim();
+            const address = document.getElementById('signupAddress').value.trim();
+            const password = document.getElementById('signupPassword').value.trim();
+            if (!name || !email || !phone || !address || !password) { alert('Fill all fields'); return; }
+            try {
+                this.currentUser = await this.apiCall('/users/register', 'POST', { name, email, phone, address, password });
+                localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+                this.isLoggedIn = true;
+                document.getElementById('signupName').value = '';
+                document.getElementById('signupEmail').value = '';
+                document.getElementById('signupPhone').value = '';
+                document.getElementById('signupAddress').value = '';
+                document.getElementById('signupPassword').value = '';
+                this.showHome();
+            } catch (e) { alert('Signup failed'); }
+        }
+
+        logout() {
+            localStorage.removeItem('currentUser');
+            this.isLoggedIn = false;
+            this.currentUser = null;
+            this.cart = [];
+            this.updateCart();
+            this.hidePage('home');
+            this.hidePage('orders');
+            this.hidePage('checkout');
+            this.hidePage('profile');
+            this.showPage('landing');
+        }
+
+        async showHome() {
+            this.hidePage('landing');
+            this.hidePage('login');
+            this.hidePage('signup');
+            this.hidePage('orders');
+            this.hidePage('checkout');
+            this.hidePage('profile');
+            this.showPage('home');
+            await this.loadRestaurants();
+        }
+
+        async loadRestaurants() {
+            try {
+                const restaurants = await this.apiCall('/restaurants');
+                const grid = document.getElementById('restaurantGrid');
+                grid.innerHTML = restaurants.map(r => `
+                <div class="restaurant-card" onclick="appInstance.openMenu(${r.id})">
+                    <img src="${r.imageUrl || 'https://via.placeholder.com/300x200'}" class="restaurant-image" alt="${r.name}">
+                    <div class="restaurant-info">
+                        <div class="restaurant-name">${r.name}</div>
+                        <div class="restaurant-cuisine">${r.cuisine}</div>
+                        <div class="restaurant-rating">Rating: ${r.rating}</div>
+                    </div>
+                </div>
+            `).join('');
+            } catch (e) {
+                document.getElementById('restaurantGrid').innerHTML = '<p style="color:#999; grid-column:1/-1; text-align:center;">Failed to load restaurants</p>';
+            }
+        }
+
+        async openMenu(restaurantId) {
+            try {
+                this.currentRestaurant = await this.apiCall(`/restaurants/${restaurantId}`);
+                const menu = await this.apiCall(`/restaurants/${restaurantId}/menu`);
+                this.menuItemQuantities = {};
+                document.getElementById('restaurantMenuName').textContent = this.currentRestaurant.name;
+                document.getElementById('menuItemsContainer').innerHTML = menu.map(item => `
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-description">${item.description}</div>
+                        <div class="item-price">₹${item.price}</div>
+                    </div>
+                    <div class="item-actions">
+                        <div class="qty-control">
+                            <button onclick="appInstance.decreaseQuantity(${item.id})">-</button>
+                            <span id="qty-${item.id}">0</span>
+                            <button onclick="appInstance.increaseQuantity(${item.id}, '${item.name.replace(/'/g, "\\'")}', ${item.price})">+</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+                document.getElementById('menuModal').classList.remove('hidden');
+            } catch (e) { alert('Failed to load menu'); }
+        }
+
+        closeMenu() {
+            document.getElementById('menuModal').classList.add('hidden');
+            this.menuItemQuantities = {};
+        }
+
+        increaseQuantity(itemId, itemName, price) {
+            if (!this.menuItemQuantities[itemId]) {
+                this.menuItemQuantities[itemId] = { count: 0, name: itemName, price: price };
+            }
+            this.menuItemQuantities[itemId].count++;
+            document.getElementById(`qty-${itemId}`).textContent = this.menuItemQuantities[itemId].count;
+
+            this.addToCart(itemId, itemName, price);
+        }
+
+        decreaseQuantity(itemId) {
+            if (this.menuItemQuantities[itemId] && this.menuItemQuantities[itemId].count > 0) {
+                this.menuItemQuantities[itemId].count--;
+                document.getElementById(`qty-${itemId}`).textContent = this.menuItemQuantities[itemId].count;
+
+                // Remove one instance from cart
+                const itemIndex = this.cart.findIndex(item => item.id === itemId);
+                if (itemIndex !== -1) {
+                    this.cart.splice(itemIndex, 1);
+                    this.updateCart();
+                }
+            }
+        }
+
+        addToCart(itemId, itemName, price) {
+            this.cart.push({
+                id: itemId,
+                name: itemName,
+                price: price,
+                restaurantId: this.currentRestaurant.id,
+                restaurantName: this.currentRestaurant.name,
+                cartId: Date.now() + Math.random()
+            });
+            this.updateCart();
+        }
+
+        updateCart() {
+            document.getElementById('cartCount').textContent = this.cart.length;
+            document.getElementById('cartCount2').textContent = this.cart.length;
+            document.getElementById('cartCount3').textContent = this.cart.length;
+            document.getElementById('cartCount4').textContent = this.cart.length;
+
+            if (this.cart.length === 0) {
+                document.getElementById('cartItems').innerHTML = '<div class="empty-cart">Your cart is empty</div>';
+            } else {
+                document.getElementById('cartItems').innerHTML = this.cart.map((item, idx) => `
+                <div class="cart-item">
+                    <div><div class="cart-item-name">${item.name}</div></div>
+                    <div><span class="cart-item-price">₹${item.price}</span> <button class="cart-remove-btn" onclick="appInstance.removeFromCart(${idx})">Remove</button></div>
+                </div>
+            `).join('');
+            }
+            const total = this.cart.reduce((sum, item) => sum + item.price, 0);
+            document.getElementById('cartTotal').textContent = total;
+        }
+
+        removeFromCart(idx) {
+            this.cart.splice(idx, 1);
+            this.updateCart();
+        }
+
+        toggleCart() {
+            document.getElementById('cartSidebar').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('hidden');
+        }
+
+        goToCheckout() {
+            if (this.cart.length === 0) { alert('Cart is empty'); return; }
+            this.toggleCart();
+            this.hidePage('home');
+            this.hidePage('profile');
+            this.showPage('checkout');
+            const subtotal = this.cart.reduce((sum, item) => sum + item.price, 0);
+            const tax = Math.round(subtotal * 0.05);
+            document.getElementById('subtotal').textContent = subtotal;
+            document.getElementById('tax').textContent = tax;
+            document.getElementById('totalAmount').textContent = (subtotal + tax + 50);
+        }
+
+        selectPayment(method) {
+            this.selectedPayment = method;
+            document.querySelectorAll('.payment-option').forEach(el => el.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+
+            // Hide all extra input sections first
+            document.getElementById('cardDetails').classList.add('hidden');
+            document.getElementById('upiDetails').classList.add('hidden');
+
+            if (method === 'card') {
+                document.getElementById('cardDetails').classList.remove('hidden');
+            } else if (method === 'upi') {
+                document.getElementById('upiDetails').classList.remove('hidden');
+            }
+        }
+
+
+        async processPayment() {
+            if (!this.selectedPayment) {
+                alert('Please select a payment method');
+                return;
+            }
+
+            // Get delivery details (always visible now)
+            const deliveryName = document.getElementById('deliveryName').value.trim();
+            const deliveryPhone = document.getElementById('deliveryPhone').value.trim();
+            const deliveryAddress = document.getElementById('deliveryAddress').value.trim();
+            const deliveryCity = document.getElementById('deliveryCity').value.trim();
+
+            if (!deliveryName || !deliveryPhone || !deliveryAddress || !deliveryCity) {
+                alert('Please fill delivery details');
+                return;
+            }
+
+            // Extra validation for payment type
+            if (this.selectedPayment === 'card') {
+                const cardNumber = document.getElementById('cardNumber').value.trim();
+                const cardExpiry = document.getElementById('cardExpiry').value.trim();
+                const cardCVV = document.getElementById('cardCVV').value.trim();
+
+                if (!cardNumber || !cardExpiry || !cardCVV) {
+                    alert('Please fill all card details');
+                    return;
+                }
+            } else if (this.selectedPayment === 'upi') {
+                const upiId = document.getElementById('upiId').value.trim();
+                if (!upiId) {
+                    alert('Please enter your UPI ID');
+                    return;
+                }
+            }
+
+            try {
+                const subtotal = this.cart.reduce((sum, item) => sum + item.price, 0);
+                const tax = Math.round(subtotal * 0.05);
+                const totalAmount = subtotal + tax + 50;
+                const fullAddress = `${deliveryAddress}, ${deliveryCity}`;
+
+                const orderData = {
+                    userId: this.currentUser.id,
+                    restaurantId: this.currentRestaurant.id,
+                    totalAmount,
+                    tax,
+                    deliveryFee: 50,
+                    deliveryAddress: fullAddress,
+                    paymentMethod: this.selectedPayment,
+                    status: 'PENDING',
+                    items: this.cart.map(item => ({
+                        menuItemId: item.id,
+                        name: item.name,
+                        price: item.price,
+                        quantity: 1
+                    }))
+                };
+
+                // Create the order
+                const order = await this.apiCall('/orders', 'POST', orderData);
+
+                // Map our frontend methods to backend’s expected names
+                let backendPaymentMethod = this.selectedPayment;
+                if (backendPaymentMethod === 'upi') backendPaymentMethod = 'wallet'; // since backend used "wallet"
+
+                const paymentData = {
+                    orderId: order.id,
+                    amount: totalAmount,
+                    paymentMethod: backendPaymentMethod,
+                    paymentStatus: 'COMPLETED'
+                };
+
+                await this.apiCall('/payments/process', 'POST', paymentData);
+
+                console.log("Order object:", order);
+                console.log("Payment data being sent:", paymentData);
+
+                // Success modal
+                document.getElementById('orderConfirmation').textContent = 'Order ID: ' + order.id;
+                document.getElementById('successModal').classList.remove('hidden');
+                this.cart = [];
+                this.updateCart();
+                this.clearCheckout();
+            } catch (e) {
+                console.error('Payment error:', e);
+                alert('Payment failed: ' + (e.message || 'Please try again.'));
+            }
+        }
+
+
+        clearCheckout() {
+            document.getElementById('deliveryName').value = '';
+            document.getElementById('deliveryPhone').value = '';
+            document.getElementById('deliveryAddress').value = '';
+            document.getElementById('deliveryCity').value = '';
+            this.selectedPayment = null;
+            document.querySelectorAll('.payment-option').forEach(el => el.classList.remove('selected'));
+        }
+
+        handleSuccessOrder() {
+            document.getElementById('successModal').classList.add('hidden');
+            this.showOrders();
+        }
+
+        async showOrders() {
+            this.hidePage('home');
+            this.hidePage('checkout');
+            this.hidePage('profile');
+            this.showPage('orders');
+            await this.loadOrders();
+        }
+
+        async showProfile() {
+            this.hidePage('home');
+            this.hidePage('orders');
+            this.hidePage('checkout');
+            this.showPage('profile');
+            await this.loadProfile();
+        }
+
+        async loadProfile() {
+            if (!this.currentUser) return;
+
+            // Set avatar initial
+            const initial = this.currentUser.name ? this.currentUser.name.charAt(0).toUpperCase() : 'U';
+            document.getElementById('profileAvatar').textContent = initial;
+            document.getElementById('profileName').textContent = this.currentUser.name || 'User';
+            document.getElementById('profileEmail').textContent = this.currentUser.email || '';
+
+            // Set profile fields
+            document.getElementById('displayName').textContent = this.currentUser.name || '-';
+            document.getElementById('displayEmail').textContent = this.currentUser.email || '-';
+            document.getElementById('displayPhone').textContent = this.currentUser.phone || '-';
+            document.getElementById('displayAddress').textContent = this.currentUser.address || '-';
+
+            // Set edit fields
+            document.getElementById('editName').value = this.currentUser.name || '';
+            document.getElementById('editEmail').value = this.currentUser.email || '';
+            document.getElementById('editPhone').value = this.currentUser.phone || '';
+            document.getElementById('editAddress').value = this.currentUser.address || '';
+
+            // Load statistics
+            try {
+                const orders = await this.apiCall(`/orders/user/${this.currentUser.id}`);
+                document.getElementById('totalOrders').textContent = orders.length;
+            } catch (e) {
+                document.getElementById('totalOrders').textContent = '0';
+            }
+
+            // Set member since date
+            if (this.currentUser.createdAt) {
+                const date = new Date(this.currentUser.createdAt);
+                document.getElementById('memberSince').textContent = date.toLocaleDateString('en-IN', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+            } else {
+                document.getElementById('memberSince').textContent = 'Recently';
+            }
+        }
+
+        toggleEditMode() {
+            const card = document.getElementById('profileCard');
+            card.classList.add('edit-mode');
+            document.getElementById('editBtn').style.display = 'none';
+            document.getElementById('saveBtn').style.display = 'block';
+            document.getElementById('cancelBtn').style.display = 'block';
+        }
+
+        cancelEdit() {
+            const card = document.getElementById('profileCard');
+            card.classList.remove('edit-mode');
+            document.getElementById('editBtn').style.display = 'block';
+            document.getElementById('saveBtn').style.display = 'none';
+            document.getElementById('cancelBtn').style.display = 'none';
+
+            // Reset values
+            document.getElementById('editName').value = this.currentUser.name || '';
+            document.getElementById('editEmail').value = this.currentUser.email || '';
+            document.getElementById('editPhone').value = this.currentUser.phone || '';
+            document.getElementById('editAddress').value = this.currentUser.address || '';
+        }
+
+        async saveProfile() {
+            const updatedData = {
+                id: this.currentUser.id,
+                name: document.getElementById('editName').value.trim(),
+                email: document.getElementById('editEmail').value.trim(),
+                phone: document.getElementById('editPhone').value.trim(),
+                address: document.getElementById('editAddress').value.trim()
+            };
+
+            if (!updatedData.name || !updatedData.email || !updatedData.phone || !updatedData.address) {
+                alert('All fields are required');
+                return;
+            }
+
+            try {
+                const updated = await this.apiCall(`/users/${this.currentUser.id}`, 'PUT', updatedData);
+                this.currentUser = { ...this.currentUser, ...updated };
+
+                const card = document.getElementById('profileCard');
+                card.classList.remove('edit-mode');
+                document.getElementById('editBtn').style.display = 'block';
+                document.getElementById('saveBtn').style.display = 'none';
+                document.getElementById('cancelBtn').style.display = 'none';
+
+                await this.loadProfile();
+                alert('Profile updated successfully!');
+            } catch (e) {
+                console.error('Failed to update profile:', e);
+                alert('Failed to update profile. Please try again.');
+            }
+        }
+
+        async loadOrders() {
+            try {
+                const orders = await this.apiCall(`/orders/user/${this.currentUser.id}`);
+                const container = document.getElementById('ordersListContainer');
+
+                if (orders.length === 0) {
+                    container.innerHTML = '<p style="text-align: center; color: #999; padding: 50px 0;">No orders yet</p>';
+                    return;
+                }
+
+                container.innerHTML = orders.map(order => {
+                    const statusClass = `status-${order.status.toLowerCase()}`;
+                    const subtotal = order.totalAmount - order.tax - order.deliveryFee;
+
+                    return `
+                <div class="order-card">
+                    <div class="order-header">
+                        <div>
+                            <div class="order-id">Order #${order.id}</div>
+                            <div style="font-size: 12px; color: #999;">${new Date(order.createdAt).toLocaleString()}</div>
+                        </div>
+                        <div class="order-status ${statusClass}">${order.status.toUpperCase()}</div>
+                    </div>
+
+                    <div class="order-details">
+                        <h4 style="margin-bottom: 10px;">Items Ordered:</h4>
+                        ${order.items && order.items.length > 0 ? order.items.map(item => `
+                            <div class="order-item">
+                                <span>${item.name || (item.menuItem ? item.menuItem.name : 'Item')}</span>
+                                <span>₹${item.price}</span>
+                            </div>
+                        `).join('') : '<p style="color: #999; padding: 10px 0;">No items found</p>'}
+                    </div>
+
+                    <div style="border-top: 1px solid #eee; padding-top: 10px; margin-top: 10px;">
+                        <div class="order-item">
+                            <span>Subtotal</span>
+                            <span>₹${subtotal.toFixed(0)}</span>
+                        </div>
+                        <div class="order-item">
+                            <span>Tax (5%)</span>
+                            <span>₹${order.tax}</span>
+                        </div>
+                        <div class="order-item">
+                            <span>Delivery Fee</span>
+                            <span>₹${order.deliveryFee}</span>
+                        </div>
+                        <div class="order-item" style="font-weight: bold; font-size: 16px; border-top: 1px solid #eee; padding-top: 8px; margin-top: 8px;">
+                            <span>Total</span>
+                            <span>₹${order.totalAmount}</span>
+                        </div>
+                    </div>
+
+                    <div class="delivery-info">
+                        <div class="delivery-address">
+                            <label>📍 Delivery Address:</label>
+                            <div>${order.deliveryAddress}</div>
+                        </div>
+
+                        ${order.estimatedDeliveryTime ? `
+                        <div class="delivery-time">
+                            <label>⏱️ Estimated Delivery:</label>
+                            <div>${new Date(order.estimatedDeliveryTime).toLocaleTimeString('en-IN', {hour: '2-digit', minute: '2-digit'})}</div>
+                        </div>
+                        ` : ''}
+
+                        ${order.deliveryAgent ? `
+                        <div class="delivery-agent">
+                            <div style="font-weight: bold; margin-bottom: 5px; color: #666;">🚴 Delivery Agent:</div>
+                            <div class="agent-info">
+                                <div class="agent-name">${order.deliveryAgent}</div>
+                            </div>
+                        </div>
+                        ` : '<p style="color: #999; margin-top: 10px;">Delivery agent will be assigned soon</p>'}
+                    </div>
+                </div>
+            `;
+                }).join('');
+            } catch (e) {
+                console.error('Failed to load orders:', e);
+                document.getElementById('ordersListContainer').innerHTML = '<p style="text-align: center; color: #ff6b6b; padding: 50px 0;">Failed to load orders. Please try again.</p>';
+            }
+        }
+
+        init() {
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                this.currentUser = JSON.parse(savedUser);
+                this.isLoggedIn = true;
+                this.showHome();
+            }
+        }
+    }
+
+    const appInstance = new FoodDeliveryApp();
+    document.addEventListener('DOMContentLoaded', () => appInstance.init());
+    if (document.readyState !== 'loading') appInstance.init();
+</script>
+
+</body>
+</html>
