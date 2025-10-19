@@ -117,3 +117,14 @@ INSERT INTO menu_items (restaurant_id, name, description, price) VALUES
 (2,'Biriyani Tandoori Combo','Plain biryani paired with quarter tandoori chicken and raita.',319.00),
 (2,'Non-Veg Carrier Meals (Half / Serves 1)','Compact Chettinad-style non-veg meal with rice, curry, and sides.',165.00);
 -- continue with remaining restaurants 3 to 22 in the same pattern
+
+
+INSERT INTO delivery_agents (name, phone, rating, created_at)
+VALUES
+('Arun Kumar', '9876543210', 4.8, NOW()),
+('Priya Sharma', '9823456789', 4.6, NOW()),
+('Manoj R', '9765432109', 4.9, NOW()),
+('Sowmiya K', '9812345670', 4.7, NOW()),
+('Ravi Teja', '9988776655', 4.5, NOW()),
+('Divya Raj', '9944332211', 4.4, NOW()),
+('Karthik V', '9123456780', 4.9, NOW());
