@@ -451,4 +451,3 @@ http://localhost:8080/api
 
 ---
 
-Made with ❤️ using Spring Boot & Vanilla JavaScript
