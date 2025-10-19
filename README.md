@@ -1,6 +1,6 @@
 # 🍽️ Food Delivery WebApp
 
-A full-stack web application for online food ordering and delivery management. Built with Spring Boot backend and vanilla JavaScript frontend.
+A full-stack web application for online food ordering and delivery management built using Spring Boot and vanilla JavaScript.
 
 ---
 
