@@ -128,26 +128,13 @@ Food-delivery-WebApp/
 │   │   └── resources/
 │   │       ├── application.properties
 │   │       └── static/
-│   │           └── index.html   ← 🧠 Main frontend file served by Spring Boot
+│   │           └── index.html  
 │   └── test/
 │       └── java/ (unit tests)
 │
 ├── database/
 │   ├── schema.sql (database tables)
 │   └── sample-data.sql (initial data)
-│
-├── frontend/
-│   ├── index.html
-│   ├── css/
-│   │   ├── style.css
-│   │   └── responsive.css
-│   ├── js/
-│   │   ├── app.js
-│   │   ├── api.js
-│   │   ├── auth.js
-│   │   └── cart.js
-│   └── assets/
-│       └── images/
 │
 ├── pom.xml (Maven dependencies)
 └── README.md
@@ -156,7 +143,7 @@ Food-delivery-WebApp/
 
 ---
 
-## 🏗️ MVC Architecture
+##  MVC Architecture
 
 The application follows the Model-View-Controller (MVC) architectural pattern:
 
