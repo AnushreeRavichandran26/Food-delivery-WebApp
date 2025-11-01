@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ADS - Food Delivery System</title>
+    <link rel="icon" type="image/png" href="/image/logo.png">
     <style>
         * {
             margin: 0;
@@ -166,15 +167,18 @@
             color: #333;
         }
 
+        .form-group textarea,
         .form-group input {
             width: 100%;
             padding: 12px;
             border: 1px solid #ddd;
             border-radius: 5px;
             font-size: 14px;
+            font-family: inherit;
             transition: border-color 0.3s;
         }
 
+        .form-group textarea,
         .form-group input:focus {
             outline: none;
             border-color: #ff6b6b;
@@ -274,6 +278,7 @@
             z-index: 2000;
             overflow-y: auto;
             padding-top: 20px;
+            animation: popIn .25s ease-in-out;
         }
 
         .menu-modal.hidden {
@@ -286,6 +291,7 @@
             width: 90%;
             max-width: 600px;
             margin-bottom: 20px;
+            animation: popIn .25s ease-in-out;
         }
 
         .menu-header {
@@ -998,6 +1004,11 @@
                     <span id="displayAddress">-</span>
                     <input type="text" id="editAddress" placeholder="Enter address">
                 </div>
+                <div class="profile-field">
+                    <label>City:</label>
+                    <span id="displayCity">-</span>
+                    <input type="text" id="editCity" placeholder="Enter city">
+                </div>
             </div>
 
             <div class="profile-section">
@@ -1578,13 +1589,14 @@
             document.getElementById('displayEmail').textContent = this.currentUser.email || '-';
             document.getElementById('displayPhone').textContent = this.currentUser.phone || '-';
             document.getElementById('displayAddress').textContent = this.currentUser.address || '-';
+            document.getElementById('displayCity').textContent = this.currentUser.city || "-";
 
             // Set edit fields
             document.getElementById('editName').value = this.currentUser.name || '';
             document.getElementById('editEmail').value = this.currentUser.email || '';
             document.getElementById('editPhone').value = this.currentUser.phone || '';
             document.getElementById('editAddress').value = this.currentUser.address || '';
-
+            document.getElementById('editCity').value = this.currentUser.city || "";
             // Load statistics
             try {
                 const orders = await this.apiCall(`/orders/user/${this.currentUser.id}`);
@@ -1626,6 +1638,8 @@
             document.getElementById('editEmail').value = this.currentUser.email || '';
             document.getElementById('editPhone').value = this.currentUser.phone || '';
             document.getElementById('editAddress').value = this.currentUser.address || '';
+            document.getElementById('editCity').value = this.currentUser.city || '';
+
         }
 
         async saveProfile() {
@@ -1634,7 +1648,8 @@
                 name: document.getElementById('editName').value.trim(),
                 email: document.getElementById('editEmail').value.trim(),
                 phone: document.getElementById('editPhone').value.trim(),
-                address: document.getElementById('editAddress').value.trim()
+                address: document.getElementById('editAddress').value.trim(),
+                city: document.getElementById('editCity').value.trim()
             };
 
             if (!updatedData.name || !updatedData.email || !updatedData.phone || !updatedData.address) {
