@@ -32,6 +32,9 @@ public class User {
     @Column(name = "postal_code", length = 10)
     private String postalCode;
 
+    @Column(nullable = false, length = 20)
+    private String role = "CUSTOMER";
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -52,7 +55,7 @@ public class User {
     public User() {}
 
     public User(Long id, String name, String email, String phone, String password,
-                String address, String city, String postalCode,
+                String address, String city, String postalCode, String role,
                 LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;
@@ -62,6 +65,7 @@ public class User {
         this.address = address;
         this.city = city;
         this.postalCode = postalCode;
+        this.role = role;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -90,6 +94,9 @@ public class User {
 
     public String getPostalCode() { return postalCode; }
     public void setPostalCode(String postalCode) { this.postalCode = postalCode; }
+
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }

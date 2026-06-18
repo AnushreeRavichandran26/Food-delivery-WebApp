@@ -45,6 +45,8 @@ CREATE TABLE orders (
     delivery_agent VARCHAR(100),
     payment_method VARCHAR(50),
     estimated_delivery TIME,
+    cancelled_at TIMESTAMP NULL,
+    cancellation_reason VARCHAR(255) NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id),

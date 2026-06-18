@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ADS - Food Delivery System</title>
     <link rel="icon" type="image/png" href="/image/logo.png">
-    <link rel="stylesheet"
-    href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         * {
             margin: 0;
@@ -15,7 +16,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Outfit', sans-serif;
             background-color: #f5f5f5;
             color: #333;
         }
@@ -539,6 +540,10 @@
             background-color: #28a745;
         }
 
+        .status-cancelled {
+            background-color: #6c757d;
+        }
+
         .order-details {
             margin-bottom: 15px;
         }
@@ -868,6 +873,684 @@
                 padding: 15px;
             }
         }
+
+        /* Google Auth Button & Dialog styles */
+        .google-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background-color: white;
+            color: #333;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s;
+            width: 100%;
+        }
+        .google-btn:hover {
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .google-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+        .google-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 4000;
+        }
+        .google-modal-content {
+            background: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+            padding: 30px;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        .google-modal-header {
+            margin-bottom: 20px;
+        }
+        .google-modal-header svg {
+            width: 60px;
+            height: 30px;
+            margin-bottom: 10px;
+        }
+        .google-modal-header h3 {
+            font-size: 20px;
+            color: #202124;
+        }
+        .google-account-list {
+            margin-top: 20px;
+            text-align: left;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+        .google-account-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .google-account-item:hover {
+            background-color: #f7f9fa;
+        }
+        .google-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #ff6b6b;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        .google-account-info .account-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: #3c4043;
+        }
+        .google-account-info .account-email {
+            font-size: 12px;
+            color: #5f6368;
+        }
+
+        /* Home Carousel Slider */
+        .food-carousel-container {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            margin: 10px auto 25px auto;
+            overflow: hidden;
+            padding: 10px 45px;
+        }
+        .food-carousel-wrapper {
+            display: flex;
+            transition: transform 0.4s ease-in-out;
+            gap: 15px;
+        }
+        .food-carousel-card {
+            flex: 0 0 140px;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            cursor: pointer;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+            border: 2px solid transparent;
+        }
+        .food-carousel-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 12px rgba(0,0,0,0.1);
+        }
+        .food-carousel-card.active {
+            border-color: #ff6b6b;
+            background-color: #fff5f5;
+        }
+        .food-carousel-card img {
+            width: 100%;
+            height: 90px;
+            object-fit: cover;
+        }
+        .food-carousel-card .food-title {
+            padding: 6px;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.95);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: #ff6b6b;
+            z-index: 10;
+            transition: background 0.2s;
+        }
+        .carousel-btn:hover {
+            background: white;
+        }
+        .carousel-btn.prev { left: 5px; }
+        .carousel-btn.next { right: 5px; }
+
+        /* Address Map Picker */
+        .map-picker-wrapper {
+            margin-top: 10px;
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #ddd;
+        }
+        .map-picker {
+            height: 200px;
+            width: 100%;
+        }
+        .map-picker-btn {
+            margin-top: 8px;
+            background-color: #ff8c42;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .map-picker-btn:hover {
+            background-color: #e0722c;
+        }
+
+        /* Split Checkout Page */
+        .checkout-split-layout {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 25px;
+            max-width: 1100px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+        @media (max-width: 768px) {
+            .checkout-split-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+        .checkout-left-pane {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+        }
+        .checkout-right-pane {
+            position: sticky;
+            top: 90px;
+            height: fit-content;
+        }
+        .checkout-summary-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+        }
+        .summary-table-container {
+            margin: 15px 0;
+            max-height: 220px;
+            overflow-y: auto;
+        }
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .summary-table th, .summary-table td {
+            padding: 10px 0;
+            text-align: left;
+            font-size: 14px;
+            border-bottom: 1px solid #eee;
+        }
+        .summary-table th {
+            color: #666;
+            font-weight: 600;
+        }
+
+        /* Stepper Progress Tracker */
+        .stepper-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            margin: 20px 0 25px 0;
+        }
+        .stepper-line {
+            position: absolute;
+            top: 15px;
+            left: 0;
+            height: 4px;
+            background-color: #e0e0e0;
+            width: 100%;
+            z-index: 1;
+        }
+        .stepper-line-fill {
+            position: absolute;
+            top: 15px;
+            left: 0;
+            height: 4px;
+            background-color: #28a745;
+            width: 0%;
+            transition: width 0.4s ease-in-out;
+            z-index: 2;
+        }
+        .stepper-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 3;
+            flex: 1;
+        }
+        .step-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: white;
+            border: 3px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 13px;
+            color: #999;
+            transition: all 0.3s;
+        }
+        .stepper-step.active .step-circle {
+            border-color: #ff6b6b;
+            color: #ff6b6b;
+            box-shadow: 0 0 10px rgba(255,107,107,0.4);
+        }
+        .stepper-step.completed .step-circle {
+            background-color: #28a745;
+            border-color: #28a745;
+            color: white;
+        }
+        .step-label {
+            margin-top: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #888;
+            text-align: center;
+            transition: color 0.3s;
+        }
+        .stepper-step.active .step-label {
+            color: #ff6b6b;
+        }
+        .stepper-step.completed .step-label {
+            color: #28a745;
+        }
+
+        /* Map visual tracker inside order card */
+        .live-map-card {
+            height: 240px;
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 15px;
+            border: 1px solid #ddd;
+        }
+
+        /* Admin Simulator Dashboard */
+        .admin-panel-container {
+            display: grid;
+            grid-template-columns: 320px 320px 1fr;
+            gap: 20px;
+            max-width: 1350px;
+            margin: 20px auto;
+            height: calc(100vh - 120px);
+            padding: 0 15px;
+        }
+        @media (max-width: 768px) {
+            .admin-panel-container {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+        }
+        .order-list-panel {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            height: 100%;
+        }
+        .panel-header {
+            background-color: #ff6b6b;
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .admin-order-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+        .admin-order-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .admin-order-item:hover {
+            background-color: #f8f9fa;
+        }
+        .admin-order-item.selected {
+            background-color: #fff5f5;
+            border-left: 4px solid #ff6b6b;
+        }
+        .order-item-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        .order-details-panel {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 25px;
+            overflow-y: auto;
+            height: 100%;
+        }
+        .simulator-actions {
+            margin-top: 20px;
+            border-top: 2px solid #eee;
+            padding-top: 15px;
+        }
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4a6fa5;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        .validation-error {
+            color: #d93025;
+            font-size: 11px;
+            margin-top: 4px;
+            display: none;
+            font-weight: 500;
+        }
+        .input-invalid {
+            border-color: #d93025 !important;
+            box-shadow: 0 0 0 1px #d93025 !important;
+        }
+        .password-requirements {
+            font-size: 11px;
+            color: #5f6368;
+            margin-top: 5px;
+            list-style: none;
+            padding-left: 0;
+            display: none;
+        }
+        .password-requirements li {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 2px;
+            transition: color 0.2s;
+            font-weight: 500;
+        }
+        .requirement-met {
+            color: #1e8e3e !important;
+        }
+        .requirement-unmet {
+            color: #d93025 !important;
+        }
+
+        /* Search and Advanced Filters */
+        .search-container {
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: #fff;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .search-input-wrapper {
+            position: relative;
+            display: flex;
+            gap: 10px;
+        }
+        .search-input-wrapper input {
+            flex: 1;
+            padding: 12px 12px 12px 40px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+        .search-input-wrapper input:focus {
+            outline: none;
+            border-color: #ff4757;
+            box-shadow: 0 0 0 3px rgba(255, 71, 87, 0.1);
+        }
+        .search-icon-svg {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            fill: #999;
+        }
+        .filter-btn-toggle {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 16px;
+            border: 1px solid #ddd;
+            background: #f8f9fa;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #555;
+            transition: all 0.2s;
+        }
+        .filter-btn-toggle:hover {
+            background: #e9ecef;
+            border-color: #ccc;
+        }
+        .filters-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+            margin-top: 5px;
+            transition: all 0.3s ease;
+        }
+        .filters-panel.collapsed {
+            display: none !important;
+        }
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .filter-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+        }
+        .filter-group select, .filter-group input {
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 13px;
+            outline: none;
+        }
+        .filter-group select:focus, .filter-group input:focus {
+            border-color: #ff4757;
+        }
+        .filter-type-tabs {
+            display: flex;
+            gap: 8px;
+        }
+        .filter-tab {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            background: #fff;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .filter-tab.active {
+            background: #ff4757;
+            color: #fff;
+            border-color: #ff4757;
+        }
+        .price-range-inputs {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .price-range-inputs input {
+            width: 100%;
+        }
+
+        /* Search Results Styles */
+        .search-results-section {
+            margin-top: 25px;
+        }
+        .search-results-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2f3542;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .search-results-clear {
+            font-size: 13px;
+            color: #ff4757;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .search-results-clear:hover {
+            text-decoration: underline;
+        }
+        
+        .dishes-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 15px;
+        }
+        .dish-search-card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            border: 1px solid #f1f2f6;
+            transition: transform 0.2s;
+        }
+        .dish-search-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+        }
+        .dish-search-info {
+            flex: 1;
+            padding-right: 15px;
+        }
+        .dish-search-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2f3542;
+        }
+        .dish-search-restaurant {
+            font-size: 12px;
+            color: #ff4757;
+            font-weight: 500;
+            margin-top: 3px;
+        }
+        .dish-search-description {
+            font-size: 13px;
+            color: #747d8c;
+            margin-top: 5px;
+        }
+        .dish-search-price-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+            min-width: 100px;
+        }
+        .dish-search-price {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2f3542;
+        }
+
+        .no-results-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .no-results-icon {
+            font-size: 40px;
+            color: #a4b0be;
+        }
+        .no-results-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: #57606f;
+        }
+        .no-results-subtext {
+            font-size: 13px;
+            color: #a4b0be;
+        }
     </style>
 </head>
 <body>
@@ -882,6 +1565,20 @@
     <div class="auth-form">
         <h2>Welcome Back</h2>
         <p class="subtitle">Login to continue ordering</p>
+        
+        <div id="googleBtnDiv" style="margin-bottom: 10px; width: 100%; display: flex; justify-content: center;"></div>
+        <button class="google-btn" onclick="appInstance.openGoogleAuthSim('login')">
+            <svg viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22c-.62-.62-1.04-1.37-1.21-2.22z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+            </svg>
+            Bypass / Simulate Google Login
+        </button>
+        
+        <div style="text-align: center; margin: 15px 0; color: #999; font-size: 13px;">or use password login</div>
+
         <div class="form-group">
             <label>Email</label>
             <input type="email" id="loginEmail" placeholder="Enter your email">
@@ -898,39 +1595,81 @@
 </div>
 
 <div id="signup" class="auth-container hidden">
-    <div class="auth-form">
+    <div class="auth-form" style="max-width: 450px; width: 100%;">
         <h2>Create Account</h2>
         <p class="subtitle">Join and start ordering now</p>
+
+        <div id="googleBtnDivSignup" style="margin-bottom: 10px; width: 100%; display: flex; justify-content: center;"></div>
+        <button class="google-btn" onclick="appInstance.openGoogleAuthSim('signup')">
+            <svg viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22c-.62-.62-1.04-1.37-1.21-2.22z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+            </svg>
+            Bypass / Simulate Google Signup
+        </button>
+        
+        <div style="text-align: center; margin: 15px 0; color: #999; font-size: 13px;">or use registration form</div>
+
         <div class="form-group">
             <label>Name</label>
             <input type="text" id="signupName" placeholder="Enter your name">
+            <div id="error-signupName" class="validation-error"></div>
         </div>
         <div class="form-group">
             <label>Email</label>
             <input type="email" id="signupEmail" placeholder="Enter your email">
+            <div id="error-signupEmail" class="validation-error"></div>
         </div>
         <div class="form-group">
             <label>Phone</label>
-            <input type="tel" id="signupPhone" placeholder="Enter your phone">
+            <input type="tel" id="signupPhone" placeholder="Enter 10-digit mobile number">
+            <div id="error-signupPhone" class="validation-error"></div>
         </div>
         <div class="form-group">
-            <label>Address</label>
-            <input type="text" id="signupAddress" placeholder="Enter your address">
-            <button type="button" class="btn btn-secondary"
-                onclick="appInstance.getCurrentLocation()">
-                📍 Use Current Location
+            <label>Delivery Address</label>
+            <input type="text" id="signupAddress" placeholder="Pick on map or enter manually">
+            <button type="button" class="map-picker-btn" onclick="appInstance.useCurrentLocation('signup')">
+                📍 Locate Me (Use Current GPS)
             </button>
-
-            <div id="map"
-             style="height:300px;
-             margin-top:10px;">
+            <div class="map-picker-wrapper">
+                <div id="signupMap" class="map-picker"></div>
             </div>
+            <div style="font-size: 11px; color: #777; margin-top: 5px;">Double-click or click the map to place a pin on your address.</div>
+            <div id="error-signupAddress" class="validation-error"></div>
+        </div>
+        <div class="form-group">
+            <label>City</label>
+            <input type="text" id="signupCity" placeholder="City" value="Bangalore">
+            <div id="error-signupCity" class="validation-error"></div>
         </div>
         <div class="form-group">
             <label>Password</label>
-            <input type="password" id="signupPassword" placeholder="Enter your password">
+            <input type="password" id="signupPassword" placeholder="Enter password (min. 8 chars)">
+            <div id="error-signupPassword" class="validation-error"></div>
+            <ul id="passwordRequirements" class="password-requirements">
+                <li id="req-length">⚪ At least 8 characters</li>
+                <li id="req-uppercase">⚪ At least 1 uppercase letter</li>
+                <li id="req-lowercase">⚪ At least 1 lowercase letter</li>
+                <li id="req-number">⚪ At least 1 number</li>
+                <li id="req-special">⚪ At least 1 special character</li>
+            </ul>
         </div>
-        <button class="btn btn-secondary" onclick="appInstance.handleSignup()">Sign Up</button>
+        
+        <div class="form-group" id="otpGroup" style="display: none;">
+            <label>Enter OTP (sent to your email)</label>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="signupOtp" placeholder="Enter 6-digit OTP" maxlength="6" style="flex: 1;">
+                <button type="button" class="btn btn-primary" onclick="appInstance.verifyOtp()" style="margin: 0; width: auto; padding: 0 15px;">Verify OTP</button>
+            </div>
+            <div id="error-signupOtp" class="validation-error"></div>
+            <div id="success-signupOtp" style="color: #1e8e3e; font-size: 12px; margin-top: 4px; display: none; font-weight: 500;"></div>
+        </div>
+
+        <button class="btn btn-primary" id="sendOtpBtn" onclick="appInstance.sendOtp()" style="width: 100%; margin-bottom: 10px;">Send OTP</button>
+        <button class="btn btn-secondary hidden" id="signupSubmitBtn" onclick="appInstance.handleSignup()" style="width: 100%;">Sign Up</button>
+        
         <div class="auth-link">
             Already have an account? <a onclick="appInstance.showLogin()">Login</a>
         </div>
@@ -944,13 +1683,68 @@
             <a id="navHome" onclick="appInstance.showHome()">Home</a>
             <a id="navOrders" onclick="appInstance.showOrders()">My Orders</a>
             <a id="navProfile" onclick="appInstance.showProfile()">Profile</a>
-            <a onclick="appInstance.toggleCart()">Cart <span class="cart-count" id="cartCount">0</span></a>
+            <a id="navAdmin" class="hidden" onclick="appInstance.showAdmin()">Admin Panel</a>
+            <a id="navCart" onclick="appInstance.toggleCart()">Cart <span class="cart-count" id="cartCount">0</span></a>
             <a onclick="appInstance.logout()">Logout</a>
         </div>
     </header>
 
     <div class="home">
-        <div class="section-title">Popular Restaurants</div>
+        <!-- Search and Filters Panel -->
+        <div class="search-container">
+            <div class="search-input-wrapper">
+                <svg class="search-icon-svg" viewBox="0 0 24 24">
+                    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                </svg>
+                <input type="text" id="homeSearchInput" placeholder="Search for restaurants, cuisines, or dishes..." oninput="appInstance.handleSearchInput()">
+                <button type="button" class="filter-btn-toggle" onclick="appInstance.toggleFilters()">
+                    <span>Filters ⚙️</span>
+                </button>
+            </div>
+            
+            <!-- Collapsible Advanced Filters -->
+            <div class="filters-panel collapsed" id="homeFiltersPanel">
+                <div class="filter-group">
+                    <label>Search Type</label>
+                    <div class="filter-type-tabs">
+                        <div class="filter-tab active" id="tab-type-all" onclick="appInstance.setSearchFilterType('all')">All</div>
+                        <div class="filter-tab" id="tab-type-restaurant" onclick="appInstance.setSearchFilterType('restaurant')">Restaurants</div>
+                        <div class="filter-tab" id="tab-type-dish" onclick="appInstance.setSearchFilterType('dish')">Dishes</div>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label>Min Restaurant Rating</label>
+                    <select id="filterMinRating" onchange="appInstance.handleFilterChange()">
+                        <option value="">Any Rating</option>
+                        <option value="3.5">3.5+ ⭐</option>
+                        <option value="4.0">4.0+ ⭐</option>
+                        <option value="4.5">4.5+ ⭐</option>
+                    </select>
+                </div>
+                <div class="filter-group" id="filterPriceGroup">
+                    <label>Price Range (Dishes only)</label>
+                    <div class="price-range-inputs">
+                        <input type="number" id="filterMinPrice" placeholder="Min (₹)" min="0" oninput="appInstance.handleFilterChange()">
+                        <span>-</span>
+                        <input type="number" id="filterMaxPrice" placeholder="Max (₹)" min="0" oninput="appInstance.handleFilterChange()">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Results Container -->
+        <div id="searchResultsContainer" class="hidden"></div>
+
+        <!-- Modern Food Category Carousel -->
+        <div class="food-carousel-container">
+            <button class="carousel-btn prev" onclick="appInstance.slideCarousel(-1)">❮</button>
+            <div class="food-carousel-wrapper" id="foodCarouselWrapper">
+                <!-- Populated dynamically via JS -->
+            </div>
+            <button class="carousel-btn next" onclick="appInstance.slideCarousel(1)">❯</button>
+        </div>
+
+        <div class="section-title" id="restaurantSectionTitle">Popular Restaurants</div>
         <div class="restaurant-grid" id="restaurantGrid"><div class="loading">Loading restaurants...</div></div>
     </div>
 </div>
@@ -962,13 +1756,14 @@
             <a id="navHome2" onclick="appInstance.showHome()">Home</a>
             <a id="navOrders2" onclick="appInstance.showOrders()">My Orders</a>
             <a id="navProfile2" onclick="appInstance.showProfile()">Profile</a>
-            <a onclick="appInstance.toggleCart()">Cart <span class="cart-count" id="cartCount2">0</span></a>
+            <a id="navAdmin2" class="hidden" onclick="appInstance.showAdmin()">Admin Panel</a>
+            <a id="navCart2" onclick="appInstance.toggleCart()">Cart <span class="cart-count" id="cartCount2">0</span></a>
             <a onclick="appInstance.logout()">Logout</a>
         </div>
     </header>
 
     <div class="orders-container">
-        <h2 style="margin-bottom: 30px;">Your Orders</h2>
+        <h2 style="margin-bottom: 25px; border-bottom: 2px solid #eee; padding-bottom: 10px;">Your Orders</h2>
         <div id="ordersListContainer"><div class="loading">Loading orders...</div></div>
     </div>
 </div>
@@ -980,7 +1775,8 @@
             <a id="navHome4" onclick="appInstance.showHome()">Home</a>
             <a id="navOrders4" onclick="appInstance.showOrders()">My Orders</a>
             <a id="navProfile4" onclick="appInstance.showProfile()">Profile</a>
-            <a onclick="appInstance.toggleCart()">Cart <span class="cart-count" id="cartCount4">0</span></a>
+            <a id="navAdmin3" class="hidden" onclick="appInstance.showAdmin()">Admin Panel</a>
+            <a id="navCart4" onclick="appInstance.toggleCart()">Cart <span class="cart-count" id="cartCount4">0</span></a>
             <a onclick="appInstance.logout()">Logout</a>
         </div>
     </header>
@@ -1047,90 +1843,142 @@
     <header>
         <div class="logo">ADS</div>
         <div class="nav">
-            <a onclick="appInstance.showHome()">Home</a>
-            <a onclick="appInstance.showOrders()">My Orders</a>
-            <a onclick="appInstance.showProfile()">Profile</a>
-            <a onclick="appInstance.toggleCart()">Cart <span class="cart-count" id="cartCount3">0</span></a>
+            <a id="navHome3" onclick="appInstance.showHome()">Home</a>
+            <a id="navOrders3" onclick="appInstance.showOrders()">My Orders</a>
+            <a id="navProfile3" onclick="appInstance.showProfile()">Profile</a>
+            <a id="navAdmin4" class="hidden" onclick="appInstance.showAdmin()">Admin Panel</a>
+            <a id="navCart3" onclick="appInstance.toggleCart()">Cart <span class="cart-count" id="cartCount3">0</span></a>
             <a onclick="appInstance.logout()">Logout</a>
         </div>
     </header>
 
-    <div class="checkout-container">
-        <div class="checkout-form" style="text-align:center;">
-            <h2 style="margin-bottom:20px;">Complete Your Order</h2>
-
-            <h3 style="color:#ff6b6b; text-align:left;">Payment Method</h3>
-            <div class="payment-method">
-                <div class="payment-option" onclick="appInstance.selectPayment('card')">Credit/Debit Card</div>
-                <div class="payment-option" onclick="appInstance.selectPayment('upi')">UPI Payment</div>
-                <div class="payment-option" onclick="appInstance.selectPayment('cod')">Cash on Delivery</div>
-            </div>
-
-            <!-- Card Details -->
-            <div id="cardDetails" class="hidden" style="margin-top:15px; text-align:left;">
+    <div class="checkout-split-layout">
+        <!-- Left Pane: Checkout Information Form -->
+        <div class="checkout-left-pane">
+            <h2 style="margin-bottom: 20px; font-weight: bold; color: #333; border-bottom: 2px solid #eee; padding-bottom: 10px;">Secure Checkout</h2>
+            
+            <div class="checkout-section">
+                <h3 style="color:#ff6b6b; font-size:15px; font-weight:bold; margin-bottom:15px; display: flex; align-items: center; gap: 8px;">
+                    <span>📍</span> Delivery Location
+                </h3>
                 <div class="form-group">
-                    <label>Card Number</label>
-                    <input type="text" id="cardNumber" placeholder="XXXX XXXX XXXX XXXX" maxlength="19">
+                    <label>Full Name</label>
+                    <input type="text" id="deliveryName" placeholder="Enter recipient's full name">
+                    <div id="error-deliveryName" class="validation-error"></div>
                 </div>
-                <div style="display:flex; gap:10px;">
-                    <div class="form-group" style="flex:1;">
-                        <label>Expiry Date</label>
-                        <input type="text" id="cardExpiry" placeholder="MM/YY" maxlength="5">
-                    </div>
-                    <div class="form-group" style="flex:1;">
-                        <label>CVV</label>
-                        <input type="password" id="cardCVV" placeholder="***" maxlength="3">
-                    </div>
-                </div>
-            </div>
-
-            <!-- UPI Details -->
-            <div id="upiDetails" class="hidden" style="margin-top:15px; text-align:left;">
                 <div class="form-group">
-                    <label>UPI ID</label>
-                    <input type="text" id="upiId" placeholder="example@upi">
+                    <label>Email Address</label>
+                    <input type="email" id="deliveryEmail" placeholder="Enter contact email address">
+                    <div id="error-deliveryEmail" class="validation-error"></div>
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="deliveryPhone" placeholder="Enter mobile number">
+                    <div id="error-deliveryPhone" class="validation-error"></div>
+                </div>
+                <div class="form-group">
+                    <label>Delivery Address</label>
+                    <input type="text" id="deliveryAddress" placeholder="Select location on map or type address">
+                    <button type="button" class="map-picker-btn" onclick="appInstance.useCurrentLocation('checkout')">
+                        📍 Locate Me (Use Current GPS)
+                    </button>
+                    <div class="map-picker-wrapper">
+                        <div id="checkoutMap" class="map-picker"></div>
+                    </div>
+                    <div id="error-deliveryAddress" class="validation-error"></div>
+                </div>
+                <div class="form-group">
+                    <label>City</label>
+                    <input type="text" id="deliveryCity" placeholder="City" value="Bangalore">
+                    <div id="error-deliveryCity" class="validation-error"></div>
                 </div>
             </div>
 
-            <h3 style="color:#ff6b6b; margin-top:25px; text-align:left;">Delivery Address</h3>
-            <div class="form-group">
-                <label>Full Name</label>
-                <input type="text" id="deliveryName" placeholder="Enter full name">
-            </div>
-            <div class="form-group">
-                <label>Phone Number</label>
-                <input type="tel" id="deliveryPhone" placeholder="Enter phone number">
-            </div>
-            <div class="form-group">
-                <label>Address</label>
-                <textarea id="deliveryAddress" placeholder="Enter delivery address" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:5px;"></textarea>
-            </div>
-            <div class="form-group">
-                <label>City</label>
-                <input type="text" id="deliveryCity" placeholder="Enter city">
-            </div>
+            <div class="checkout-section" style="margin-top: 30px;">
+                <h3 style="color:#ff6b6b; font-size:15px; font-weight:bold; margin-bottom:15px; display: flex; align-items: center; gap: 8px;">
+                    <span>💳</span> Payment Option
+                </h3>
+                <div class="payment-method">
+                    <div class="payment-option" id="pay-card" onclick="appInstance.selectPayment('card')">Credit/Debit Card</div>
+                    <div class="payment-option" id="pay-upi" onclick="appInstance.selectPayment('upi')">UPI Payments</div>
+                    <div class="payment-option" id="pay-cod" onclick="appInstance.selectPayment('cod')">Cash on Delivery</div>
+                </div>
 
-            <div class="order-summary-box" style="margin-top:20px;">
-                <div class="summary-row">
-                    <span>Subtotal:</span><span id="subtotal">0</span>
+                <!-- Credit Card Details Form -->
+                <div id="cardDetails" class="hidden" style="margin-top:15px;">
+                    <div class="form-group">
+                        <label>Card Number</label>
+                        <input type="text" id="cardNumber" placeholder="4111 2222 3333 4444" maxlength="19">
+                        <div id="error-cardNumber" class="validation-error"></div>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <div class="form-group" style="flex:1;">
+                            <label>Expiry Date</label>
+                            <input type="text" id="cardExpiry" placeholder="MM/YY" maxlength="5">
+                        </div>
+                        <div class="form-group" style="flex:1;">
+                            <label>CVV</label>
+                            <input type="password" id="cardCVV" placeholder="***" maxlength="3">
+                        </div>
+                    </div>
                 </div>
-                <div class="summary-row">
-                    <span>Delivery Fee:</span><span>50</span>
-                </div>
-                <div class="summary-row">
-                    <span>Tax (5%):</span><span id="tax">0</span>
-                </div>
-                <div class="summary-total">
-                    <span>Total Amount:</span><span id="totalAmount">0</span>
+
+                <!-- UPI Form -->
+                <div id="upiDetails" class="hidden" style="margin-top:15px;">
+                    <div class="form-group">
+                        <label>UPI ID</label>
+                        <input type="text" id="upiId" placeholder="username@upi">
+                        <div id="error-upiId" class="validation-error"></div>
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <button class="btn btn-primary" style="width:100%; padding:15px;" onclick="appInstance.processPayment()">Complete Payment</button>
-            <button class="btn" style="width:100%; padding:15px; background-color:#ddd; color:#333; margin-top:10px;" onclick="appInstance.showHome()">Cancel</button>
+        <!-- Right Pane: Sticky Order Summary Box -->
+        <div class="checkout-right-pane">
+            <div class="checkout-summary-card">
+                <h3 style="font-weight: bold; margin-bottom: 10px;">Your Order</h3>
+                <div style="font-size: 13px; color: #777; margin-bottom: 15px;" id="checkoutRestName">Ordering from ...</div>
+                
+                <div class="summary-table-container">
+                    <table class="summary-table">
+                        <thead>
+                            <tr>
+                                <th>Food Item</th>
+                                <th style="text-align: right;">Price</th>
+                            </tr>
+                        </thead>
+                        <tbody id="checkoutItemsList">
+                            <!-- Populated dynamically via JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="order-summary-box">
+                    <div class="summary-row">
+                        <span>Items Subtotal:</span>
+                        <span id="subtotal">₹0</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Delivery Fee:</span>
+                        <span>₹50</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Tax & Packaging (5%):</span>
+                        <span id="tax">₹0</span>
+                    </div>
+                    <div class="summary-total" style="font-size: 18px; margin-top: 15px; color:#ff6b6b;">
+                        <span>Grand Total:</span>
+                        <span id="totalAmount">₹0</span>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" style="width:100%; padding:15px; font-size:15px; margin-top:20px;" onclick="appInstance.processPayment()">Place Order & Pay</button>
+                <button class="btn" style="width:100%; padding:12px; background-color:#f1f3f4; color:#333; margin-top:10px;" onclick="appInstance.showHome()">Modify Items</button>
+            </div>
         </div>
     </div>
 </div>
-
 
 <div id="menuModal" class="menu-modal hidden">
     <div class="menu-content">
@@ -1162,10 +2010,102 @@
 <div id="overlay" class="modal hidden" onclick="appInstance.toggleCart()"></div>
 
 <div id="successModal" class="success-modal hidden">
-    <h2>Order Placed Successfully!</h2>
-    <p>Your order has been confirmed</p>
-    <p id="orderConfirmation" style="font-weight: bold; color: #ff6b6b;"></p>
-    <button class="btn btn-primary" onclick="appInstance.handleSuccessOrder()" style="margin-top: 20px; width: 100%;">View Order Status</button>
+    <h2 style="color:#28a745;">Order Placed Successfully!</h2>
+    <p>Your payment was completed and order has been dispatched.</p>
+    <p id="orderConfirmation" style="font-weight: bold; color: #ff6b6b; margin: 10px 0;"></p>
+    <button class="btn btn-primary" onclick="appInstance.handleSuccessOrder()" style="margin-top: 15px; width: 100%;">Monitor Real-time Delivery</button>
+</div>
+
+<!-- Google Account Chooser & Configuration Modal -->
+<div id="googleAuthModal" class="google-modal hidden">
+    <div class="google-modal-content">
+        <div class="google-modal-header">
+            <svg viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22c-.62-.62-1.04-1.37-1.21-2.22z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+            </svg>
+            <h3>Google Account Integration</h3>
+            <p style="font-size:13px; color:#5f6368; margin-top:5px;">Configure real Google Sign-In or use offline simulation</p>
+        </div>
+        
+        <!-- Google Client ID Setup -->
+        <div style="margin: 15px 0; padding: 15px; background: #f8f9fa; border: 1px solid #dadce0; border-radius: 8px; text-align: left;">
+            <h4 style="font-size: 14px; margin-bottom: 8px; color: #202124;">Real Google Auth Setup</h4>
+            <div class="form-group" style="margin-bottom: 10px;">
+                <label style="font-size: 11px; color: #5f6368; display: block; margin-bottom: 4px;">Google Client ID</label>
+                <input type="text" id="googleClientIdInput" placeholder="xxxx-xxxx.apps.googleusercontent.com" style="width: 100%; padding: 8px; border: 1px solid #dadce0; border-radius: 4px; font-size: 12px;">
+            </div>
+            <button class="btn btn-primary" onclick="appInstance.saveGoogleClientId()" style="width: 100%; padding: 8px; font-size: 12px;">Save Client ID & Initialize</button>
+            <p style="font-size: 10px; color: #70757a; margin-top: 6px;">Note: Saves locally to your browser. Re-renders SDK buttons.</p>
+        </div>
+
+        <div style="text-align: center; margin: 15px 0; color: #70757a; font-size: 12px; font-weight: 500; position: relative;">
+            <span style="background: #fff; padding: 0 10px; z-index: 1; position: relative;">OR BYPASS WITH SIMULATION</span>
+            <div style="position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: #e0e0e0; z-index: 0;"></div>
+        </div>
+
+        <div class="google-account-list" id="googleAccountList">
+            <!-- Rendered in script -->
+        </div>
+        <button class="btn" onclick="appInstance.closeGoogleAuthSim()" style="background:#f1f3f4; color:#3c4043; border:none; margin-top:15px; width:100%;">Cancel</button>
+    </div>
+</div>
+
+<!-- Restaurant Analytics Modal -->
+<div id="analyticsModal" class="menu-modal hidden" style="z-index: 4000;">
+    <div class="menu-content" style="max-width: 550px;">
+        <div class="menu-header" style="background:#4a6fa5;">
+            <h3 id="analyticsTitle" style="color:white; font-size:18px; font-weight:bold; margin:0;">Restaurant Performance Analytics</h3>
+            <button class="menu-close" onclick="appInstance.closeAnalyticsModal()">&times;</button>
+        </div>
+        <div class="menu-body" id="analyticsBody" style="padding: 20px;">
+            <!-- Loaded dynamically -->
+        </div>
+    </div>
+</div>
+
+<!-- Admin Simulator Panel View -->
+<div id="admin" class="hidden">
+    <header>
+        <div class="logo">ADS - Admin Simulator</div>
+        <div class="nav">
+            <a id="navHome5" onclick="appInstance.showHome()">Home</a>
+            <a id="navProfile5" onclick="appInstance.showProfile()">Profile</a>
+            <a id="navAdmin5" class="hidden" onclick="appInstance.showAdmin()">Admin Panel</a>
+            <a onclick="appInstance.logout()">Logout</a>
+        </div>
+    </header>
+
+    <div class="admin-panel-container">
+        <!-- Left Pane: Orders List -->
+        <div class="order-list-panel">
+            <div class="panel-header">
+                <span>Active Orders Stream</span>
+                <span style="font-size:11px; background:white; color:#ff6b6b; padding:2px 8px; border-radius:10px;">SSE Live</span>
+            </div>
+            <div class="admin-order-list" id="adminOrderList">
+                <div class="loading">Loading orders...</div>
+            </div>
+        </div>
+
+        <!-- Middle Pane: Restaurant stats -->
+        <div class="order-list-panel">
+            <div class="panel-header" style="background-color: #4a6fa5;">
+                <span>Restaurant Stats</span>
+                <span style="font-size:11px; background:white; color:#4a6fa5; padding:2px 8px; border-radius:10px;">Orders Count</span>
+            </div>
+            <div class="admin-order-list" id="adminRestaurantStatsList" style="padding: 10px; overflow-y: auto;">
+                <div class="loading">Loading stats...</div>
+            </div>
+        </div>
+
+        <!-- Right Pane: Order Action Details -->
+        <div class="order-details-panel" id="adminOrderDetails">
+            <h3 style="color:#999; text-align:center; margin-top:120px;">Select an order from the live stream to simulate status changes</h3>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -1179,6 +2119,28 @@
             this.selectedPayment = null;
             this.currentRestaurant = null;
             this.menuItemQuantities = {};
+            this.userEventSource = null;
+            this.adminEventSource = null;
+            this.signupMap = null;
+            this.signupMarker = null;
+            this.checkoutMap = null;
+            this.checkoutMarker = null;
+            this.carouselIndex = 0;
+            this.selectedCategory = null;
+            this.activeMaps = {}; // orderId -> { map, marker, intervalId }
+            this.adminSelectedOrder = null;
+            this.isOtpVerified = false;
+            this.otpEmail = '';
+            
+            // Search & Filters state
+            this.searchQuery = '';
+            this.searchDebounceTimeout = null;
+            this.searchFilters = {
+                type: 'all',
+                minRating: '',
+                minPrice: '',
+                maxPrice: ''
+            };
         }
 
         async apiCall(endpoint, method = 'GET', data = null) {
@@ -1186,10 +2148,27 @@
                 method,
                 headers: { 'Content-Type': 'application/json' }
             };
+            if (this.currentUser && this.currentUser.id) {
+                options.headers['X-User-Id'] = this.currentUser.id;
+            }
             if (data) options.body = JSON.stringify(data);
             try {
                 const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                if (response.status === 403) {
+                    alert("Access Denied: You do not have the required permissions.");
+                    this.showHome();
+                    throw new Error("HTTP 403 Forbidden");
+                }
+                if (!response.ok) {
+                    let errMsg = `HTTP ${response.status}`;
+                    try {
+                        const errData = await response.json();
+                        if (errData && errData.message) {
+                            errMsg = errData.message;
+                        }
+                    } catch (e) {}
+                    throw new Error(errMsg);
+                }
                 return await response.json();
             } catch (error) {
                 console.error('API Error:', error);
@@ -1205,27 +2184,23 @@
         hidePage(id) { document.getElementById(id).classList.add('hidden'); }
 
         updateNavigation(currentPage) {
-            // Remove active class from all nav links
             document.querySelectorAll('header a[id^="nav"]').forEach(link => {
                 link.classList.remove('active');
             });
 
-            // Add active class to current page
-            if (currentPage === 'home') {
-                document.getElementById('navHome')?.classList.add('active');
-                document.getElementById('navHome2')?.classList.add('active');
-                document.getElementById('navHome3')?.classList.add('active');
-                document.getElementById('navHome4')?.classList.add('active');
-            } else if (currentPage === 'orders') {
-                document.getElementById('navOrders')?.classList.add('active');
-                document.getElementById('navOrders2')?.classList.add('active');
-                document.getElementById('navOrders3')?.classList.add('active');
-                document.getElementById('navOrders4')?.classList.add('active');
-            } else if (currentPage === 'profile') {
-                document.getElementById('navProfile')?.classList.add('active');
-                document.getElementById('navProfile2')?.classList.add('active');
-                document.getElementById('navProfile3')?.classList.add('active');
-                document.getElementById('navProfile4')?.classList.add('active');
+            const ids = [
+                { page: 'home', items: ['navHome', 'navHome2', 'navHome4', 'navHome5'] },
+                { page: 'orders', items: ['navOrders', 'navOrders2', 'navOrders4', 'navOrders5'] },
+                { page: 'profile', items: ['navProfile', 'navProfile2', 'navProfile4', 'navProfile5'] },
+                { page: 'admin', items: ['navAdmin', 'navAdmin2', 'navAdmin3', 'navAdmin5'] }
+            ];
+
+            const found = ids.find(x => x.page === currentPage);
+            if (found) {
+                found.items.forEach(itemId => {
+                    const el = document.getElementById(itemId);
+                    if (el) el.classList.add('active');
+                });
             }
         }
 
@@ -1239,12 +2214,369 @@
             this.hidePage('home');
             this.hidePage('orders');
             this.hidePage('profile');
+            this.hidePage('checkout');
+            this.hidePage('admin');
             this.showPage('login');
         }
 
         showSignup() {
             this.hidePage('login');
+            this.hidePage('home');
+            this.hidePage('orders');
+            this.hidePage('profile');
+            this.hidePage('checkout');
+            this.hidePage('admin');
             this.showPage('signup');
+            
+            this.isOtpVerified = false;
+            this.otpEmail = '';
+            
+            // Show Send OTP button, hide signup button, hide OTP input group
+            const sendOtpBtn = document.getElementById('sendOtpBtn');
+            if (sendOtpBtn) sendOtpBtn.classList.remove('hidden');
+            const signupSubmitBtn = document.getElementById('signupSubmitBtn');
+            if (signupSubmitBtn) signupSubmitBtn.classList.add('hidden');
+            const otpGroup = document.getElementById('otpGroup');
+            if (otpGroup) otpGroup.style.display = 'none';
+            
+            const emailInput = document.getElementById('signupEmail');
+            if (emailInput) {
+                emailInput.readOnly = false;
+                emailInput.classList.remove('input-invalid');
+            }
+            const otpInput = document.getElementById('signupOtp');
+            if (otpInput) {
+                otpInput.value = '';
+                otpInput.readOnly = false;
+                otpInput.classList.remove('input-invalid');
+            }
+            const errorOtp = document.getElementById('error-signupOtp');
+            if (errorOtp) errorOtp.style.display = 'none';
+            const successOtp = document.getElementById('success-signupOtp');
+            if (successOtp) successOtp.style.display = 'none';
+            
+            // Wait for DOM to update and render Leaflet map
+            setTimeout(() => {
+                this.initSignupMap();
+                if (this.signupMap) this.signupMap.invalidateSize();
+            }, 200);
+        }
+
+        /* Google Accounts Chooser Popup Simulator */
+        openGoogleAuthSim(mode) {
+            this.googleAuthMode = mode;
+            document.getElementById('googleAuthModal').classList.remove('hidden');
+            
+            const savedClientId = localStorage.getItem('googleClientId');
+            const clientIdInput = document.getElementById('googleClientIdInput');
+            if (clientIdInput && savedClientId) {
+                clientIdInput.value = savedClientId;
+            }
+
+            const list = document.getElementById('googleAccountList');
+            const mockAccounts = [
+                { name: "Alex Smith", email: "alex.smith@gmail.com", avatar: "A", phone: "9876543210", address: "12th Cross Rd, Indiranagar", city: "Bangalore" },
+                { name: "Priya Patel", email: "priya.patel@gmail.com", avatar: "P", phone: "9823456789", address: "100 Feet Rd, Hal 2nd Stage, Indiranagar", city: "Bangalore" },
+                { name: "John Doe", email: "john.doe@gmail.com", avatar: "J", phone: "9765432109", address: "Brigade Road, Ashok Nagar", city: "Bangalore" }
+            ];
+            
+            list.innerHTML = mockAccounts.map(acc => `
+                <div class="google-account-item" onclick="appInstance.selectGoogleAccount(${JSON.stringify(acc).replace(/"/g, '&quot;')})">
+                    <div class="google-avatar">${acc.avatar}</div>
+                    <div class="google-account-info">
+                        <div class="account-name">${acc.name}</div>
+                        <div class="account-email">${acc.email}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        closeGoogleAuthSim() {
+            document.getElementById('googleAuthModal').classList.add('hidden');
+        }
+
+        async selectGoogleAccount(account) {
+            this.closeGoogleAuthSim();
+            try {
+                const signupData = {
+                    name: account.name,
+                    email: account.email,
+                    phone: account.phone,
+                    address: account.address,
+                    city: account.city,
+                    password: "GoogleAuthSimulatedPassword123!"
+                };
+
+                // Try registering. If user exists, backend will throw error which we catch.
+                try {
+                    await this.apiCall('/users/register', 'POST', signupData);
+                } catch(e) {
+                    console.log("Account already registered, logging in directly...");
+                }
+
+                // Autologin
+                this.currentUser = await this.apiCall('/users/login', 'POST', {
+                    email: account.email,
+                    password: "GoogleAuthSimulatedPassword123!"
+                });
+
+                localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+                this.isLoggedIn = true;
+                this.updateAdminLinkVisibility();
+                
+                // If on signup page, populate fields visually before redirecting
+                if (this.googleAuthMode === 'signup') {
+                    document.getElementById('signupName').value = account.name;
+                    document.getElementById('signupEmail').value = account.email;
+                    document.getElementById('signupPhone').value = account.phone;
+                    document.getElementById('signupAddress').value = account.address;
+                    document.getElementById('signupCity').value = account.city;
+                }
+
+                this.showNotification(`Logged in as Google User: ${account.email}`);
+                this.showHome();
+            } catch (err) {
+                console.error("Google account simulation login failed:", err);
+                alert("Simulated Google account sign-in failed.");
+            }
+        }
+
+        /* Map Address Picker: Leaflet & Geocoding */
+        initSignupMap() {
+            if (this.signupMap) return;
+            const defaultLat = 12.9716;
+            const defaultLng = 77.5946;
+            
+            this.signupMap = L.map('signupMap', { zoomControl: true }).setView([defaultLat, defaultLng], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap'
+            }).addTo(this.signupMap);
+            
+            this.signupMarker = L.marker([defaultLat, defaultLng], { draggable: true }).addTo(this.signupMap);
+            
+            this.signupMarker.on('dragend', () => {
+                const pos = this.signupMarker.getLatLng();
+                this.reverseGeocode(pos.lat, pos.lng, 'signupAddress', 'signupCity');
+            });
+            
+            this.signupMap.on('click', (e) => {
+                this.signupMarker.setLatLng(e.latlng);
+                this.reverseGeocode(e.latlng.lat, e.latlng.lng, 'signupAddress', 'signupCity');
+            });
+        }
+
+        initCheckoutMap() {
+            if (this.checkoutMap) return;
+            const defaultLat = 12.9716;
+            const defaultLng = 77.5946;
+            
+            this.checkoutMap = L.map('checkoutMap', { zoomControl: true }).setView([defaultLat, defaultLng], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap'
+            }).addTo(this.checkoutMap);
+            
+            this.checkoutMarker = L.marker([defaultLat, defaultLng], { draggable: true }).addTo(this.checkoutMap);
+            
+            this.checkoutMarker.on('dragend', () => {
+                const pos = this.checkoutMarker.getLatLng();
+                this.reverseGeocode(pos.lat, pos.lng, 'deliveryAddress', 'deliveryCity');
+            });
+            
+            this.checkoutMap.on('click', (e) => {
+                this.checkoutMarker.setLatLng(e.latlng);
+                this.reverseGeocode(e.latlng.lat, e.latlng.lng, 'deliveryAddress', 'deliveryCity');
+            });
+        }
+
+        useCurrentLocation(type) {
+            if (!navigator.geolocation) {
+                alert("Geolocation is not supported by your browser");
+                return;
+            }
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    const lat = pos.coords.latitude;
+                    const lng = pos.coords.longitude;
+                    
+                    if (type === 'signup') {
+                        this.signupMap.setView([lat, lng], 15);
+                        this.signupMarker.setLatLng([lat, lng]);
+                        this.reverseGeocode(lat, lng, 'signupAddress', 'signupCity');
+                    } else if (type === 'checkout') {
+                        this.checkoutMap.setView([lat, lng], 15);
+                        this.checkoutMarker.setLatLng([lat, lng]);
+                        this.reverseGeocode(lat, lng, 'deliveryAddress', 'deliveryCity');
+                    }
+                },
+                (err) => {
+                    console.warn("Geolocation denied, placing marker at center Bangalore", err);
+                    alert("GPS access denied or unavailable. Please click on the map manually.");
+                }
+            );
+        }
+
+        async reverseGeocode(lat, lng, inputId, cityId) {
+            try {
+                const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`, {
+                    headers: { 'Accept-Language': 'en' }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && data.display_name) {
+                        document.getElementById(inputId).value = data.display_name;
+                        if (cityId) {
+                            const city = data.address.city || data.address.town || data.address.village || data.address.state_district || 'Bangalore';
+                            document.getElementById(cityId).value = city;
+                        }
+                        return;
+                    }
+                }
+            } catch (e) {
+                console.error("Reverse geocoding fetch error, using local fallback:", e);
+            }
+            // Mock address fallbacks
+            const fallbacks = [
+                "12th Cross Rd, Indiranagar, Bangalore",
+                "100 Feet Rd, Hal 2nd Stage, Indiranagar, Bangalore",
+                "MG Road, Ashok Nagar, Bangalore",
+                "Koramangala 4th Block, Bengaluru",
+                "Brigade Rd, Shanthala Nagar, Bangalore"
+            ];
+            const address = fallbacks[Math.floor(Math.random() * fallbacks.length)];
+            document.getElementById(inputId).value = address;
+            if (cityId) document.getElementById(cityId).value = "Bangalore";
+        }
+
+        /* Real-time Order Monitoring (SSE Emitters) */
+        initUserSSE(userId) {
+            this.closeUserSSE();
+            console.log(`Connecting User SSE Stream for User #${userId}...`);
+            
+            this.userEventSource = new EventSource(`${API_BASE_URL}/orders/stream/user/${userId}`);
+            
+            this.userEventSource.addEventListener('connect', (e) => {
+                console.log("User SSE connection verified:", e.data);
+            });
+            
+            this.userEventSource.addEventListener('ORDER_UPDATED', (e) => {
+                try {
+                    const order = JSON.parse(e.data);
+                    console.log("Received live ORDER_UPDATED:", order);
+                    
+                    // Reload customer orders list if visible
+                    if (!document.getElementById('orders').classList.contains('hidden')) {
+                        this.loadOrders();
+                    }
+                    
+                    this.showNotification(`Order #${order.id} is now ${order.status.toUpperCase()}!`);
+                } catch(err) {
+                    console.error("Error parsing order update packet:", err);
+                }
+            });
+            
+            this.userEventSource.onerror = (err) => {
+                console.warn("User SSE disconnected, retrying...", err);
+            };
+        }
+
+        closeUserSSE() {
+            if (this.userEventSource) {
+                this.userEventSource.close();
+                this.userEventSource = null;
+            }
+        }
+
+        initAdminSSE() {
+            this.closeAdminSSE();
+            console.log("Connecting Admin SSE Stream for system active list...");
+            
+            const userId = this.currentUser ? this.currentUser.id : 0;
+            this.adminEventSource = new EventSource(`${API_BASE_URL}/orders/stream/admin?userId=${userId}`);
+            
+            this.adminEventSource.addEventListener('connect', (e) => {
+                console.log("Admin SSE connection verified:", e.data);
+            });
+            
+            this.adminEventSource.addEventListener('NEW_ORDER', (e) => {
+                try {
+                    const order = JSON.parse(e.data);
+                    console.log("SSE Admin NEW_ORDER alert:", order);
+                    
+                    if (!document.getElementById('admin').classList.contains('hidden')) {
+                        this.loadAdminOrders();
+                        this.loadRestaurantStats();
+                    }
+                    this.showNotification(`New System Order placed! Order #${order.id}`);
+                } catch(err) {
+                    console.error("Error parsing new order packet:", err);
+                }
+            });
+
+            this.adminEventSource.addEventListener('ORDER_UPDATED', (e) => {
+                try {
+                    const order = JSON.parse(e.data);
+                    console.log("SSE Admin ORDER_UPDATED alert:", order);
+                    
+                    if (!document.getElementById('admin').classList.contains('hidden')) {
+                        this.loadAdminOrders();
+                        this.loadRestaurantStats();
+                        if (this.adminSelectedOrder && this.adminSelectedOrder.id === order.id) {
+                            this.selectAdminOrder(order.id);
+                        }
+                    }
+                } catch(err) {
+                    console.error("Error parsing order update packet:", err);
+                }
+            });
+            
+            this.adminEventSource.onerror = (err) => {
+                console.warn("Admin SSE disconnected, retrying...", err);
+            };
+        }
+
+        closeAdminSSE() {
+            if (this.adminEventSource) {
+                this.adminEventSource.close();
+                this.adminEventSource = null;
+            }
+        }
+
+        showNotification(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 30px;
+                left: 30px;
+                background-color: #333;
+                color: white;
+                padding: 15px 25px;
+                border-radius: 8px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+                z-index: 5000;
+                font-weight: 600;
+                border-left: 5px solid #ff6b6b;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                font-family: 'Outfit', sans-serif;
+                transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+            `;
+            toast.innerHTML = `🔔 <span>${message}</span>`;
+            document.body.appendChild(toast);
+            
+            // Trigger entry animation
+            toast.style.transform = 'translateY(100px)';
+            toast.style.opacity = '0';
+            setTimeout(() => {
+                toast.style.transform = 'translateY(0)';
+                toast.style.opacity = '1';
+            }, 50);
+
+            setTimeout(() => {
+                toast.style.transform = 'translateY(100px)';
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
         }
 
         async handleLogin() {
@@ -1256,7 +2588,6 @@
                 return;
             }
 
-            // Email validation
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
                 alert('Please enter a valid email address');
@@ -1266,73 +2597,569 @@
             try {
                 this.currentUser = await this.apiCall('/users/login', 'POST', { email, password });
                 localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
-
                 this.isLoggedIn = true;
+                this.updateAdminLinkVisibility();
+                
                 document.getElementById('loginEmail').value = '';
                 document.getElementById('loginPassword').value = '';
+                
                 this.showHome();
             } catch (e) {
                 alert('Login failed. Please check your credentials.');
             }
         }
 
-        async handleSignup() {
-            const name = document.getElementById('signupName').value.trim();
-            const email = document.getElementById('signupEmail').value.trim();
-            const phone = document.getElementById('signupPhone').value.trim();
-            const address = document.getElementById('signupAddress').value.trim();
-            const password = document.getElementById('signupPassword').value.trim();
-            if (!name || !email || !phone || !address || !password) { alert('Fill all fields'); return; }
-            if (name.length < 3) {
-                alert('Name must be at least 3 characters');
+        async sendOtp() {
+            // Clear previous OTP errors
+            const errorOtp = document.getElementById('error-signupOtp');
+            if (errorOtp) errorOtp.style.display = 'none';
+            
+            // Validate all form fields first
+            if (!this.validateSignupForm()) {
                 return;
             }
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-if (!emailRegex.test(email)) {
-    alert('Enter a valid email');
-    return;
-}
-            const phoneRegex = /^[6-9]\d{9}$/;
+            const emailInput = document.getElementById('signupEmail');
+            const email = emailInput.value.trim();
 
-if (!phoneRegex.test(phone)) {
-    alert('Enter a valid 10-digit phone number');
-    return;
-}
-            if (address.length < 10) {
-    alert('Address must be at least 10 characters');
-    return;
-}
-            const passwordRegex =
-/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,20}$/;
+            const sendOtpBtn = document.getElementById('sendOtpBtn');
+            const originalText = sendOtpBtn.textContent;
+            sendOtpBtn.disabled = true;
+            sendOtpBtn.textContent = 'Sending...';
 
-if (!passwordRegex.test(password)) {
-    alert('Password must contain uppercase, lowercase, number and special character');
-    return;
-}
             try {
-                this.currentUser = await this.apiCall('/users/register', 'POST', { name, email, phone, address, password });
+                const response = await fetch(`${API_BASE_URL}/otp/send`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(errorText || `HTTP ${response.status}`);
+                }
+
+                // Lock email field
+                emailInput.readOnly = true;
+                this.otpEmail = email;
+
+                // Show OTP group
+                const otpGroup = document.getElementById('otpGroup');
+                if (otpGroup) otpGroup.style.display = 'block';
+
+                alert('An OTP has been sent to ' + email + '. Please check the console or your email.');
+            } catch (e) {
+                alert('Failed to send OTP: ' + e.message);
+                sendOtpBtn.disabled = false;
+            } finally {
+                sendOtpBtn.textContent = originalText;
+                sendOtpBtn.disabled = false;
+            }
+        }
+
+        async verifyOtp() {
+            const otpInput = document.getElementById('signupOtp');
+            const otp = otpInput.value.trim();
+            const errorOtp = document.getElementById('error-signupOtp');
+            const successOtp = document.getElementById('success-signupOtp');
+
+            if (errorOtp) errorOtp.style.display = 'none';
+            if (successOtp) successOtp.style.display = 'none';
+
+            if (!otp) {
+                if (errorOtp) {
+                    errorOtp.textContent = 'Please enter the OTP';
+                    errorOtp.style.display = 'block';
+                }
+                otpInput.classList.add('input-invalid');
+                return;
+            }
+
+            if (otp.length !== 6 || /\D/.test(otp)) {
+                if (errorOtp) {
+                    errorOtp.textContent = 'OTP must be a 6-digit number';
+                    errorOtp.style.display = 'block';
+                }
+                otpInput.classList.add('input-invalid');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/otp/verify`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: this.otpEmail, otp })
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(errorText || `HTTP ${response.status}`);
+                }
+
+                this.isOtpVerified = true;
+                otpInput.classList.remove('input-invalid');
+                otpInput.readOnly = true;
+
+                if (successOtp) {
+                    successOtp.textContent = 'Email verified successfully!';
+                    successOtp.style.display = 'block';
+                }
+
+                // Hide send OTP button, show signup submit button
+                const sendOtpBtn = document.getElementById('sendOtpBtn');
+                if (sendOtpBtn) sendOtpBtn.classList.add('hidden');
+
+                const signupSubmitBtn = document.getElementById('signupSubmitBtn');
+                if (signupSubmitBtn) signupSubmitBtn.classList.remove('hidden');
+            } catch (e) {
+                if (errorOtp) {
+                    errorOtp.textContent = e.message;
+                    errorOtp.style.display = 'block';
+                }
+                otpInput.classList.add('input-invalid');
+            }
+        }
+
+        async handleSignup() {
+            if (!this.isOtpVerified) {
+                alert('Please verify your email address via OTP first.');
+                return;
+            }
+
+            const email = document.getElementById('signupEmail').value.trim();
+            if (email.toLowerCase().trim() !== this.otpEmail.toLowerCase().trim()) {
+                alert('Email address has changed. Please send and verify OTP again.');
+                return;
+            }
+
+            if (!this.validateSignupForm()) {
+                return;
+            }
+
+            const name = document.getElementById('signupName').value.trim();
+            const phone = document.getElementById('signupPhone').value.trim();
+            const address = document.getElementById('signupAddress').value.trim();
+            const city = document.getElementById('signupCity').value.trim();
+            const password = document.getElementById('signupPassword').value;
+
+            try {
+                this.currentUser = await this.apiCall('/users/register', 'POST', { name, email, phone, address, city, password });
                 localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
                 this.isLoggedIn = true;
+                this.updateAdminLinkVisibility();
+
                 document.getElementById('signupName').value = '';
                 document.getElementById('signupEmail').value = '';
                 document.getElementById('signupPhone').value = '';
                 document.getElementById('signupAddress').value = '';
                 document.getElementById('signupPassword').value = '';
+                document.getElementById('signupOtp').value = '';
+
+                const reqsDiv = document.getElementById('passwordRequirements');
+                if (reqsDiv) reqsDiv.style.display = 'none';
+
                 this.showHome();
-            } catch (e) { alert('Signup failed'); }
+            } catch (e) {
+                alert('Signup failed: ' + e.message);
+            }
+        }
+
+        setupCheckoutValidation() {
+            const nameEl = document.getElementById('deliveryName');
+            const emailEl = document.getElementById('deliveryEmail');
+            const phoneEl = document.getElementById('deliveryPhone');
+            const addressEl = document.getElementById('deliveryAddress');
+            const cityEl = document.getElementById('deliveryCity');
+            const cardEl = document.getElementById('cardNumber');
+            const upiEl = document.getElementById('upiId');
+
+            if (!nameEl) return;
+
+            const showError = (el, msg) => {
+                el.classList.add('input-invalid');
+                const errDiv = document.getElementById(`error-${el.id}`);
+                if (errDiv) {
+                    errDiv.textContent = msg;
+                    errDiv.style.display = 'block';
+                }
+            };
+
+            const hideError = (el) => {
+                el.classList.remove('input-invalid');
+                const errDiv = document.getElementById(`error-${el.id}`);
+                if (errDiv) {
+                    errDiv.style.display = 'none';
+                }
+            };
+
+            const validateName = () => {
+                const val = nameEl.value.trim();
+                if (!val) {
+                    showError(nameEl, 'Name is required');
+                    return false;
+                }
+                if (val.length < 3) {
+                    showError(nameEl, 'Name must be at least 3 characters');
+                    return false;
+                }
+                hideError(nameEl);
+                return true;
+            };
+
+            const validateEmail = () => {
+                const val = emailEl.value.trim();
+                if (!val) {
+                    showError(emailEl, 'Email is required');
+                    return false;
+                }
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(val)) {
+                    showError(emailEl, 'Enter a valid email address');
+                    return false;
+                }
+                hideError(emailEl);
+                return true;
+            };
+
+            const validatePhone = () => {
+                const val = phoneEl.value.trim();
+                if (!val) {
+                    showError(phoneEl, 'Phone number is required');
+                    return false;
+                }
+                if (/[^\d]/.test(val)) {
+                    showError(phoneEl, 'Phone number must contain only digits');
+                    return false;
+                }
+                if (val.length !== 10) {
+                    showError(phoneEl, 'Phone number must be exactly 10 digits');
+                    return false;
+                }
+                const phoneRegex = /^[6-9]\d{9}$/;
+                if (!phoneRegex.test(val)) {
+                    showError(phoneEl, 'Phone number must start with 6, 7, 8, or 9');
+                    return false;
+                }
+                hideError(phoneEl);
+                return true;
+            };
+
+            const validateAddress = () => {
+                const val = addressEl.value.trim();
+                if (!val) {
+                    showError(addressEl, 'Address is required');
+                    return false;
+                }
+                if (val.length < 5) {
+                    showError(addressEl, 'Address must be at least 5 characters');
+                    return false;
+                }
+                hideError(addressEl);
+                return true;
+            };
+
+            const validateCity = () => {
+                const val = cityEl.value.trim();
+                if (!val) {
+                    showError(cityEl, 'City is required');
+                    return false;
+                }
+                hideError(cityEl);
+                return true;
+            };
+
+            const validateCard = () => {
+                if (this.selectedPayment !== 'card') {
+                    hideError(cardEl);
+                    return true;
+                }
+                const val = cardEl.value.trim().replace(/\s/g, '');
+                if (!val) {
+                    showError(cardEl, 'Card number is required');
+                    return false;
+                }
+                if (/[^\d]/.test(val)) {
+                    showError(cardEl, 'Card number must contain only digits');
+                    return false;
+                }
+                
+                let sum = 0;
+                let shouldDouble = false;
+                for (let i = val.length - 1; i >= 0; i--) {
+                    let digit = parseInt(val.charAt(i));
+                    if (shouldDouble) {
+                        if ((digit *= 2) > 9) digit -= 9;
+                    }
+                    sum += digit;
+                    shouldDouble = !shouldDouble;
+                }
+                const isValidLuhn = (sum % 10) === 0;
+                if (!isValidLuhn) {
+                    showError(cardEl, 'Invalid card number (Luhn check failed)');
+                    return false;
+                }
+                hideError(cardEl);
+                return true;
+            };
+
+            const validateUpi = () => {
+                if (this.selectedPayment !== 'upi') {
+                    hideError(upiEl);
+                    return true;
+                }
+                const val = upiEl.value.trim();
+                if (!val) {
+                    showError(upiEl, 'UPI ID is required');
+                    return false;
+                }
+                const upiRegex = /^[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}$/;
+                if (!upiRegex.test(val)) {
+                    showError(upiEl, 'Enter a valid UPI ID (e.g. username@bank)');
+                    return false;
+                }
+                hideError(upiEl);
+                return true;
+            };
+
+            nameEl.addEventListener('input', validateName);
+            nameEl.addEventListener('blur', validateName);
+
+            emailEl.addEventListener('input', validateEmail);
+            emailEl.addEventListener('blur', validateEmail);
+
+            phoneEl.addEventListener('input', validatePhone);
+            phoneEl.addEventListener('blur', validatePhone);
+
+            addressEl.addEventListener('input', validateAddress);
+            addressEl.addEventListener('blur', validateAddress);
+
+            cityEl.addEventListener('input', validateCity);
+            cityEl.addEventListener('blur', validateCity);
+
+            cardEl.addEventListener('input', validateCard);
+            cardEl.addEventListener('blur', validateCard);
+
+            upiEl.addEventListener('input', validateUpi);
+            upiEl.addEventListener('blur', validateUpi);
+
+            this.validateCheckoutForm = () => {
+                const nameValid = validateName();
+                const emailValid = validateEmail();
+                const phoneValid = validatePhone();
+                const addressValid = validateAddress();
+                const cityValid = validateCity();
+                
+                let paymentValid = true;
+                if (this.selectedPayment === 'card') {
+                    paymentValid = validateCard();
+                } else if (this.selectedPayment === 'upi') {
+                    paymentValid = validateUpi();
+                }
+
+                return nameValid && emailValid && phoneValid && addressValid && cityValid && paymentValid;
+            };
+        }
+
+        setupSignupValidation() {
+            const nameEl = document.getElementById('signupName');
+            const emailEl = document.getElementById('signupEmail');
+            const phoneEl = document.getElementById('signupPhone');
+            const addressEl = document.getElementById('signupAddress');
+            const cityEl = document.getElementById('signupCity');
+            const passwordEl = document.getElementById('signupPassword');
+
+            if (!nameEl) return;
+
+            const showError = (el, msg) => {
+                el.classList.add('input-invalid');
+                const errDiv = document.getElementById(`error-${el.id}`);
+                if (errDiv) {
+                    errDiv.textContent = msg;
+                    errDiv.style.display = 'block';
+                }
+            };
+
+            const hideError = (el) => {
+                el.classList.remove('input-invalid');
+                const errDiv = document.getElementById(`error-${el.id}`);
+                if (errDiv) {
+                    errDiv.style.display = 'none';
+                }
+            };
+
+            const validateName = () => {
+                const val = nameEl.value.trim();
+                if (!val) {
+                    showError(nameEl, 'Name is required');
+                    return false;
+                }
+                if (val.length < 3) {
+                    showError(nameEl, 'Name must be at least 3 characters');
+                    return false;
+                }
+                hideError(nameEl);
+                return true;
+            };
+
+            const validateEmail = () => {
+                const val = emailEl.value.trim();
+                if (!val) {
+                    showError(emailEl, 'Email is required');
+                    return false;
+                }
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(val)) {
+                    showError(emailEl, 'Enter a valid email address');
+                    return false;
+                }
+                hideError(emailEl);
+                return true;
+            };
+
+            const validatePhone = () => {
+                const val = phoneEl.value.trim();
+                if (!val) {
+                    showError(phoneEl, 'Phone number is required');
+                    return false;
+                }
+                if (/[^\d]/.test(val)) {
+                    showError(phoneEl, 'Phone number must contain only digits');
+                    return false;
+                }
+                if (val.length !== 10) {
+                    showError(phoneEl, 'Phone number must be exactly 10 digits');
+                    return false;
+                }
+                const phoneRegex = /^[6-9]\d{9}$/;
+                if (!phoneRegex.test(val)) {
+                    showError(phoneEl, 'Phone number must start with 6, 7, 8, or 9');
+                    return false;
+                }
+                hideError(phoneEl);
+                return true;
+            };
+
+            const validateAddress = () => {
+                const val = addressEl.value.trim();
+                if (!val) {
+                    showError(addressEl, 'Address is required');
+                    return false;
+                }
+                if (val.length < 5) {
+                    showError(addressEl, 'Address must be at least 5 characters');
+                    return false;
+                }
+                hideError(addressEl);
+                return true;
+            };
+
+            const validateCity = () => {
+                const val = cityEl.value.trim();
+                if (!val) {
+                    showError(cityEl, 'City is required');
+                    return false;
+                }
+                hideError(cityEl);
+                return true;
+            };
+
+            const validatePassword = (isTyping = false) => {
+                const val = passwordEl.value;
+                const reqsDiv = document.getElementById('passwordRequirements');
+
+                if (val.length > 0) {
+                    reqsDiv.style.display = 'block';
+                } else if (!isTyping) {
+                    reqsDiv.style.display = 'none';
+                }
+
+                const hasMinLength = val.length >= 8;
+                const hasUppercase = /[A-Z]/.test(val);
+                const hasLowercase = /[a-z]/.test(val);
+                const hasNumber = /[0-9]/.test(val);
+                const hasSpecial = /[^A-Za-z0-9]/.test(val);
+
+                const updateReq = (id, met, text) => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        el.className = met ? 'requirement-met' : 'requirement-unmet';
+                        el.textContent = (met ? '✓ ' : '✗ ') + text;
+                    }
+                };
+
+                updateReq('req-length', hasMinLength, 'At least 8 characters');
+                updateReq('req-uppercase', hasUppercase, 'At least 1 uppercase letter');
+                updateReq('req-lowercase', hasLowercase, 'At least 1 lowercase letter');
+                updateReq('req-number', hasNumber, 'At least 1 number');
+                updateReq('req-special', hasSpecial, 'At least 1 special character');
+
+                const isValid = hasMinLength && hasUppercase && hasLowercase && hasNumber && hasSpecial;
+
+                if (!val) {
+                    if (!isTyping) showError(passwordEl, 'Password is required');
+                    return false;
+                }
+
+                if (!isValid) {
+                    if (!isTyping) showError(passwordEl, 'Password does not meet requirements');
+                    return false;
+                }
+
+                hideError(passwordEl);
+                return true;
+            };
+
+            nameEl.addEventListener('input', validateName);
+            nameEl.addEventListener('blur', validateName);
+
+            emailEl.addEventListener('input', validateEmail);
+            emailEl.addEventListener('blur', validateEmail);
+
+            phoneEl.addEventListener('input', validatePhone);
+            phoneEl.addEventListener('blur', validatePhone);
+
+            addressEl.addEventListener('input', validateAddress);
+            addressEl.addEventListener('blur', validateAddress);
+
+            cityEl.addEventListener('input', validateCity);
+            cityEl.addEventListener('blur', validateCity);
+
+            passwordEl.addEventListener('input', () => validatePassword(true));
+            passwordEl.addEventListener('blur', () => validatePassword(false));
+
+            this.validateSignupForm = () => {
+                const nameValid = validateName();
+                const emailValid = validateEmail();
+                const phoneValid = validatePhone();
+                const addressValid = validateAddress();
+                const cityValid = validateCity();
+                const passwordValid = validatePassword(false);
+
+                return nameValid && emailValid && phoneValid && addressValid && cityValid && passwordValid;
+            };
         }
 
         logout() {
             localStorage.removeItem('currentUser');
             this.isLoggedIn = false;
             this.currentUser = null;
+            this.updateAdminLinkVisibility();
             this.cart = [];
             this.updateCart();
+            this.closeUserSSE();
+            this.closeAdminSSE();
+            
+            // Clean up active order maps
+            Object.keys(this.activeMaps).forEach(orderId => {
+                clearInterval(this.activeMaps[orderId].intervalId);
+            });
+            this.activeMaps = {};
+
             this.hidePage('home');
             this.hidePage('orders');
             this.hidePage('checkout');
             this.hidePage('profile');
+            this.hidePage('admin');
             this.showPage('landing');
         }
 
@@ -1343,51 +3170,374 @@ if (!passwordRegex.test(password)) {
             this.hidePage('orders');
             this.hidePage('checkout');
             this.hidePage('profile');
+            this.hidePage('admin');
             this.showPage('home');
+            
+            if (this.currentUser && !this.userEventSource) {
+                this.initUserSSE(this.currentUser.id);
+            }
+
+            // Reset search state on home navigation
+            const searchInput = document.getElementById('homeSearchInput');
+            if (searchInput) searchInput.value = '';
+            this.searchQuery = '';
+            this.searchFilters = { type: 'all', minRating: '', minPrice: '', maxPrice: '' };
+            
+            const panel = document.getElementById('homeFiltersPanel');
+            if (panel) panel.classList.add('collapsed');
+            
+            const minRatingEl = document.getElementById('filterMinRating');
+            if (minRatingEl) minRatingEl.value = '';
+            const minPriceEl = document.getElementById('filterMinPrice');
+            if (minPriceEl) minPriceEl.value = '';
+            const maxPriceEl = document.getElementById('filterMaxPrice');
+            if (maxPriceEl) maxPriceEl.value = '';
+            
+            this.updateSearchTabUI();
+            
+            const resultsDiv = document.getElementById('searchResultsContainer');
+            if (resultsDiv) {
+                resultsDiv.innerHTML = '';
+                resultsDiv.classList.add('hidden');
+            }
+            this.toggleHomeDefaultElements(true);
+
+            this.loadFoodCategories();
             await this.loadRestaurants();
+        }
+
+        toggleHomeDefaultElements(show) {
+            const carousel = document.querySelector('.food-carousel-container');
+            const title = document.getElementById('restaurantSectionTitle');
+            const grid = document.getElementById('restaurantGrid');
+            
+            if (show) {
+                if (carousel) carousel.classList.remove('hidden');
+                if (title) title.classList.remove('hidden');
+                if (grid) grid.classList.remove('hidden');
+            } else {
+                if (carousel) carousel.classList.add('hidden');
+                if (title) title.classList.add('hidden');
+                if (grid) grid.classList.add('hidden');
+            }
+        }
+
+        toggleFilters() {
+            const panel = document.getElementById('homeFiltersPanel');
+            if (panel) {
+                panel.classList.toggle('collapsed');
+            }
+        }
+
+        setSearchFilterType(type) {
+            this.searchFilters.type = type;
+            this.updateSearchTabUI();
+            
+            // Enable/disable price range inputs visually if type is restaurant
+            const priceGroup = document.getElementById('filterPriceGroup');
+            if (priceGroup) {
+                if (type === 'restaurant') {
+                    priceGroup.style.opacity = '0.5';
+                    document.getElementById('filterMinPrice').disabled = true;
+                    document.getElementById('filterMaxPrice').disabled = true;
+                } else {
+                    priceGroup.style.opacity = '1';
+                    document.getElementById('filterMinPrice').disabled = false;
+                    document.getElementById('filterMaxPrice').disabled = false;
+                }
+            }
+            
+            this.performSearch();
+        }
+
+        updateSearchTabUI() {
+            ['all', 'restaurant', 'dish'].forEach(t => {
+                const el = document.getElementById(`tab-type-${t}`);
+                if (el) {
+                    if (t === this.searchFilters.type) {
+                        el.classList.add('active');
+                    } else {
+                        el.classList.remove('active');
+                    }
+                }
+            });
+        }
+
+        handleSearchInput() {
+            const val = document.getElementById('homeSearchInput').value;
+            this.searchQuery = val;
+            
+            if (this.searchDebounceTimeout) {
+                clearTimeout(this.searchDebounceTimeout);
+            }
+            
+            this.searchDebounceTimeout = setTimeout(() => {
+                this.performSearch();
+            }, 300);
+        }
+
+        handleFilterChange() {
+            this.searchFilters.minRating = document.getElementById('filterMinRating').value;
+            this.searchFilters.minPrice = document.getElementById('filterMinPrice').value;
+            this.searchFilters.maxPrice = document.getElementById('filterMaxPrice').value;
+            
+            this.performSearch();
+        }
+
+        async performSearch() {
+            // Check if search query or any filters are active
+            const hasActiveFilters = this.searchFilters.type !== 'all' || 
+                                     this.searchFilters.minRating || 
+                                     this.searchFilters.minPrice || 
+                                     this.searchFilters.maxPrice;
+                                     
+            if (!this.searchQuery && !hasActiveFilters) {
+                // If search is completely empty, restore home page default elements
+                this.toggleHomeDefaultElements(true);
+                const resultsDiv = document.getElementById('searchResultsContainer');
+                if (resultsDiv) {
+                    resultsDiv.classList.add('hidden');
+                    resultsDiv.innerHTML = '';
+                }
+                return;
+            }
+            
+            this.toggleHomeDefaultElements(false);
+            const resultsDiv = document.getElementById('searchResultsContainer');
+            if (resultsDiv) {
+                resultsDiv.classList.remove('hidden');
+                resultsDiv.innerHTML = '<div class="loading">Searching...</div>';
+            }
+            
+            try {
+                // Build search URL
+                let url = `/search?q=${encodeURIComponent(this.searchQuery)}`;
+                url += `&type=${this.searchFilters.type}`;
+                if (this.searchFilters.minRating) url += `&minRating=${this.searchFilters.minRating}`;
+                if (this.searchFilters.minPrice) url += `&minPrice=${this.searchFilters.minPrice}`;
+                if (this.searchFilters.maxPrice) url += `&maxPrice=${this.searchFilters.maxPrice}`;
+                
+                const results = await this.apiCall(url);
+                this.renderSearchResults(results);
+            } catch (e) {
+                if (resultsDiv) {
+                    resultsDiv.innerHTML = '<p style="color:#d93025; text-align:center;">Search failed. Please try again.</p>';
+                }
+            }
+        }
+
+        renderSearchResults(results) {
+            const resultsDiv = document.getElementById('searchResultsContainer');
+            if (!resultsDiv) return;
+            
+            const restaurants = results.restaurants || [];
+            const menuItems = results.menuItems || [];
+            
+            if (restaurants.length === 0 && menuItems.length === 0) {
+                resultsDiv.innerHTML = `
+                    <div class="no-results-card">
+                        <div class="no-results-icon">🔍</div>
+                        <div class="no-results-text">No results found</div>
+                        <div class="no-results-subtext">We couldn't find any matches for "${this.searchQuery}". Try checking for spelling or using other keywords.</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = `<div class="search-results-section">`;
+            html += `
+                <div class="search-results-title">
+                    <span>Search Results</span>
+                    <span class="search-results-clear" onclick="appInstance.clearSearch()">Clear Search</span>
+                </div>
+            `;
+            
+            // Render Restaurants
+            if (restaurants.length > 0) {
+                html += `
+                    <div class="section-sub-title" style="font-size:16px; font-weight:600; margin:15px 0 10px 0; color:#555;">Restaurants (${restaurants.length})</div>
+                    <div class="restaurant-grid">
+                        ${restaurants.map(r => `
+                            <div class="restaurant-card" onclick="appInstance.openMenu(${r.id})">
+                                <img src="${r.imageUrl || 'https://via.placeholder.com/300x200'}" class="restaurant-image" alt="${r.name}">
+                                <div class="restaurant-info">
+                                    <div class="restaurant-name">${r.name}</div>
+                                    <div class="restaurant-cuisine">${r.cuisine}</div>
+                                    <div class="restaurant-rating">⭐ ${r.rating || '4.0'}</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+            
+            // Render Dishes
+            if (menuItems.length > 0) {
+                html += `
+                    <div class="section-sub-title" style="font-size:16px; font-weight:600; margin:25px 0 10px 0; color:#555;">Dishes (${menuItems.length})</div>
+                    <div class="dishes-list">
+                        ${menuItems.map(item => `
+                            <div class="dish-search-card">
+                                <div class="dish-search-info">
+                                    <div class="dish-search-name">${item.name}</div>
+                                    <div class="dish-search-restaurant">from ${item.restaurantName}</div>
+                                    <div class="dish-search-description">${item.description || ''}</div>
+                                </div>
+                                <div class="dish-search-price-wrapper">
+                                    <div class="dish-search-price">₹${item.price}</div>
+                                    <button class="btn btn-primary" style="margin:0; padding:6px 12px; font-size:13px;" onclick="appInstance.openMenu(${item.restaurantId})">Go to Restaurant</button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+            
+            html += `</div>`;
+            resultsDiv.innerHTML = html;
+        }
+
+        clearSearch() {
+            document.getElementById('homeSearchInput').value = '';
+            this.searchQuery = '';
+            
+            // Reset rating and price filters
+            document.getElementById('filterMinRating').value = '';
+            document.getElementById('filterMinPrice').value = '';
+            document.getElementById('filterMaxPrice').value = '';
+            this.searchFilters.minRating = '';
+            this.searchFilters.minPrice = '';
+            this.searchFilters.maxPrice = '';
+            
+            this.performSearch();
         }
 
         async loadRestaurants() {
             try {
-                const restaurants = await this.apiCall('/restaurants');
+                let restaurants = await this.apiCall('/restaurants');
+                
+                // Filter by category if selected
+                if (this.selectedCategory) {
+                    restaurants = restaurants.filter(r => 
+                        r.cuisine.toLowerCase().includes(this.selectedCategory.toLowerCase())
+                    );
+                }
+
                 const grid = document.getElementById('restaurantGrid');
+                if (restaurants.length === 0) {
+                    grid.innerHTML = '<p style="color:#999; grid-column:1/-1; text-align:center; padding: 40px 0;">No restaurants found in this category.</p>';
+                    return;
+                }
+
                 grid.innerHTML = restaurants.map(r => `
-                <div class="restaurant-card" onclick="appInstance.openMenu(${r.id})">
-                    <img src="${r.imageUrl || 'https://via.placeholder.com/300x200'}" class="restaurant-image" alt="${r.name}">
-                    <div class="restaurant-info">
-                        <div class="restaurant-name">${r.name}</div>
-                        <div class="restaurant-cuisine">${r.cuisine}</div>
-                        <div class="restaurant-rating">Rating: ${r.rating}</div>
+                    <div class="restaurant-card" onclick="appInstance.openMenu(${r.id})">
+                        <img src="${r.imageUrl || 'https://via.placeholder.com/300x200'}" class="restaurant-image" alt="${r.name}">
+                        <div class="restaurant-info">
+                            <div class="restaurant-name">${r.name}</div>
+                            <div class="restaurant-cuisine">${r.cuisine}</div>
+                            <div class="restaurant-rating">⭐ ${r.rating || '4.0'}</div>
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                `).join('');
             } catch (e) {
                 document.getElementById('restaurantGrid').innerHTML = '<p style="color:#999; grid-column:1/-1; text-align:center;">Failed to load restaurants</p>';
             }
         }
 
+        /* Food category slider */
+        loadFoodCategories() {
+            const categories = [
+                { name: "All", image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=150&h=100&fit=crop" },
+                { name: "Biryani", image: "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?w=150&h=100&fit=crop" },
+                { name: "Burgers", image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=150&h=100&fit=crop" },
+                { name: "Pizza", image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=150&h=100&fit=crop" },
+                { name: "South Indian", image: "https://images.unsplash.com/photo-1668236543090-82eba5ee5976?w=150&h=100&fit=crop" },
+                { name: "Bakery", image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=150&h=100&fit=crop" },
+                { name: "Desserts", image: "https://images.unsplash.com/photo-1551024601-bec78aea704b?w=150&h=100&fit=crop" },
+                { name: "Italian", image: "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=150&h=100&fit=crop" },
+                { name: "Japanese", image: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=150&h=100&fit=crop" },
+                { name: "Asian", image: "https://images.unsplash.com/photo-1512058564366-18510be2db19?w=150&h=100&fit=crop" }
+            ];
+            
+            const wrapper = document.getElementById('foodCarouselWrapper');
+            wrapper.innerHTML = categories.map(cat => `
+                <div class="food-carousel-card ${this.selectedCategory === cat.name || (cat.name === 'All' && !this.selectedCategory) ? 'active' : ''}" 
+                     onclick="appInstance.selectCategory('${cat.name}')">
+                    <img src="${cat.image}" alt="${cat.name}">
+                    <div class="food-title">${cat.name}</div>
+                </div>
+            `).join('');
+            this.slideCarousel(0);
+        }
+
+        slideCarousel(direction) {
+            const wrapper = document.getElementById('foodCarouselWrapper');
+            const cardWidth = 155; // width + gap
+            const containerWidth = wrapper.parentElement.clientWidth - 90; // margin offset
+            const maxVisible = Math.max(1, Math.floor(containerWidth / cardWidth));
+            const maxIndex = Math.max(0, wrapper.children.length - maxVisible);
+            
+            this.carouselIndex = Math.min(Math.max(0, this.carouselIndex + direction), maxIndex);
+            wrapper.style.transform = `translateX(-${this.carouselIndex * cardWidth}px)`;
+        }
+
+        selectCategory(catName) {
+            if (catName === 'All' || this.selectedCategory === catName) {
+                this.selectedCategory = null;
+                document.getElementById('restaurantSectionTitle').textContent = "Popular Restaurants";
+            } else {
+                this.selectedCategory = catName;
+                document.getElementById('restaurantSectionTitle').textContent = `${catName} Restaurants`;
+            }
+            this.loadRestaurants();
+            this.loadFoodCategories();
+        }
+
         async openMenu(restaurantId) {
+            if (this.currentUser && this.currentUser.role === 'ADMIN') {
+                try {
+                    const r = await this.apiCall(`/restaurants/${restaurantId}`);
+                    this.showRestaurantAnalytics(restaurantId, r.name);
+                } catch(e) {
+                    console.error("Failed to load restaurant for analytics:", e);
+                }
+                return;
+            }
             try {
                 this.currentRestaurant = await this.apiCall(`/restaurants/${restaurantId}`);
                 const menu = await this.apiCall(`/restaurants/${restaurantId}/menu`);
                 this.menuItemQuantities = {};
+                
+                // Sync quantities from existing cart items for this restaurant
+                this.cart.forEach(item => {
+                    if (item.restaurantId === restaurantId) {
+                        if (!this.menuItemQuantities[item.id]) {
+                            this.menuItemQuantities[item.id] = { count: 0, name: item.name, price: item.price };
+                        }
+                        this.menuItemQuantities[item.id].count++;
+                    }
+                });
+                
                 document.getElementById('restaurantMenuName').textContent = this.currentRestaurant.name;
-                document.getElementById('menuItemsContainer').innerHTML = menu.map(item => `
-                <div class="menu-item">
-                    <div class="item-details">
-                        <div class="item-name">${item.name}</div>
-                        <div class="item-description">${item.description}</div>
-                        <div class="item-price">₹${item.price}</div>
-                    </div>
-                    <div class="item-actions">
-                        <div class="qty-control">
-                            <button onclick="appInstance.decreaseQuantity(${item.id})">-</button>
-                            <span id="qty-${item.id}">0</span>
-                            <button onclick="appInstance.increaseQuantity(${item.id}, '${item.name.replace(/'/g, "\\'")}', ${item.price})">+</button>
+                document.getElementById('menuItemsContainer').innerHTML = menu.map(item => {
+                    const currentQty = this.menuItemQuantities[item.id] ? this.menuItemQuantities[item.id].count : 0;
+                    return `
+                        <div class="menu-item">
+                            <div class="item-details">
+                                <div class="item-name">${item.name}</div>
+                                <div class="item-description">${item.description}</div>
+                                <div class="item-price">₹${item.price}</div>
+                            </div>
+                            <div class="item-actions">
+                                <div class="qty-control">
+                                    <button onclick="appInstance.decreaseQuantity(${item.id})">-</button>
+                                    <span id="qty-${item.id}">${currentQty}</span>
+                                    <button onclick="appInstance.increaseQuantity(${item.id}, '${item.name.replace(/'/g, "\\'")}', ${item.price})">+</button>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            `).join('');
+                    `;
+                }).join('');
                 document.getElementById('menuModal').classList.remove('hidden');
             } catch (e) { alert('Failed to load menu'); }
         }
@@ -1398,12 +3548,22 @@ if (!passwordRegex.test(password)) {
         }
 
         increaseQuantity(itemId, itemName, price) {
+            if (this.cart.length > 0) {
+                const firstItem = this.cart[0];
+                if (firstItem.restaurantId !== this.currentRestaurant.id) {
+                    const confirmClear = confirm(`Your cart contains items from ${firstItem.restaurantName || 'another restaurant'}.\n\nWould you like to clear the cart and add items from ${this.currentRestaurant.name}?`);
+                    if (confirmClear) {
+                        this.clearCart();
+                    } else {
+                        return;
+                    }
+                }
+            }
             if (!this.menuItemQuantities[itemId]) {
                 this.menuItemQuantities[itemId] = { count: 0, name: itemName, price: price };
             }
             this.menuItemQuantities[itemId].count++;
             document.getElementById(`qty-${itemId}`).textContent = this.menuItemQuantities[itemId].count;
-
             this.addToCart(itemId, itemName, price);
         }
 
@@ -1412,13 +3572,21 @@ if (!passwordRegex.test(password)) {
                 this.menuItemQuantities[itemId].count--;
                 document.getElementById(`qty-${itemId}`).textContent = this.menuItemQuantities[itemId].count;
 
-                // Remove one instance from cart
                 const itemIndex = this.cart.findIndex(item => item.id === itemId);
                 if (itemIndex !== -1) {
                     this.cart.splice(itemIndex, 1);
                     this.updateCart();
                 }
             }
+        }
+
+        clearCart() {
+            this.cart = [];
+            this.menuItemQuantities = {};
+            this.updateCart();
+            document.querySelectorAll('[id^="qty-"]').forEach(el => {
+                el.textContent = '0';
+            });
         }
 
         addToCart(itemId, itemName, price) {
@@ -1443,18 +3611,39 @@ if (!passwordRegex.test(password)) {
                 document.getElementById('cartItems').innerHTML = '<div class="empty-cart">Your cart is empty</div>';
             } else {
                 document.getElementById('cartItems').innerHTML = this.cart.map((item, idx) => `
-                <div class="cart-item">
-                    <div><div class="cart-item-name">${item.name}</div></div>
-                    <div><span class="cart-item-price">₹${item.price}</span> <button class="cart-remove-btn" onclick="appInstance.removeFromCart(${idx})">Remove</button></div>
-                </div>
-            `).join('');
+                    <div class="cart-item">
+                        <div><div class="cart-item-name">${item.name}</div></div>
+                        <div><span class="cart-item-price">₹${item.price}</span> <button class="cart-remove-btn" onclick="appInstance.removeFromCart(${idx})">Remove</button></div>
+                    </div>
+                `).join('');
             }
             const total = this.cart.reduce((sum, item) => sum + item.price, 0);
             document.getElementById('cartTotal').textContent = total;
         }
 
         removeFromCart(idx) {
-            this.cart.splice(idx, 1);
+            const removedItem = this.cart[idx];
+            if (removedItem) {
+                const itemId = removedItem.id;
+                this.cart.splice(idx, 1);
+                
+                // Sync quantity with menuItemQuantities
+                const remainingCount = this.cart.filter(item => item.id === itemId).length;
+                if (remainingCount > 0) {
+                    if (this.menuItemQuantities[itemId]) {
+                        this.menuItemQuantities[itemId].count = remainingCount;
+                    }
+                } else {
+                    if (this.menuItemQuantities[itemId]) {
+                        this.menuItemQuantities[itemId].count = 0;
+                    }
+                }
+                
+                const qtyEl = document.getElementById(`qty-${itemId}`);
+                if (qtyEl) {
+                    qtyEl.textContent = remainingCount;
+                }
+            }
             this.updateCart();
         }
 
@@ -1468,20 +3657,61 @@ if (!passwordRegex.test(password)) {
             this.toggleCart();
             this.hidePage('home');
             this.hidePage('profile');
+            this.hidePage('orders');
+            this.hidePage('admin');
             this.showPage('checkout');
+            
+            // Populate details from current user profile
+            if (this.currentUser) {
+                document.getElementById('deliveryName').value = this.currentUser.name || '';
+                document.getElementById('deliveryEmail').value = this.currentUser.email || '';
+                document.getElementById('deliveryPhone').value = this.currentUser.phone || '';
+                document.getElementById('deliveryAddress').value = this.currentUser.address || '';
+                document.getElementById('deliveryCity').value = this.currentUser.city || 'Bangalore';
+            }
+
+            // Reset validation states
+            const fields = ['deliveryName', 'deliveryEmail', 'deliveryPhone', 'deliveryAddress', 'deliveryCity', 'cardNumber', 'upiId'];
+            fields.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.remove('input-invalid');
+                const err = document.getElementById(`error-${id}`);
+                if (err) err.style.display = 'none';
+            });
+
+            document.getElementById('checkoutRestName').textContent = `Ordering from: ${this.cart[0].restaurantName}`;
+            
+            const list = document.getElementById('checkoutItemsList');
+            list.innerHTML = this.cart.map(item => `
+                <tr>
+                    <td>${item.name}</td>
+                    <td style="text-align:right; font-weight:bold;">₹${item.price}</td>
+                </tr>
+            `).join('');
+
             const subtotal = this.cart.reduce((sum, item) => sum + item.price, 0);
             const tax = Math.round(subtotal * 0.05);
-            document.getElementById('subtotal').textContent = subtotal;
-            document.getElementById('tax').textContent = tax;
-            document.getElementById('totalAmount').textContent = (subtotal + tax + 50);
+            document.getElementById('subtotal').textContent = '₹' + subtotal;
+            document.getElementById('tax').textContent = '₹' + tax;
+            document.getElementById('totalAmount').textContent = '₹' + (subtotal + tax + 50);
+            
+            // Select default CoD payment option
+            this.selectPayment('cod');
+
+            // Render Checkout Map address selector
+            setTimeout(() => {
+                this.initCheckoutMap();
+                if (this.checkoutMap) this.checkoutMap.invalidateSize();
+            }, 250);
         }
 
         selectPayment(method) {
             this.selectedPayment = method;
             document.querySelectorAll('.payment-option').forEach(el => el.classList.remove('selected'));
-            event.currentTarget.classList.add('selected');
+            
+            const selectedTab = document.getElementById(`pay-${method}`);
+            if (selectedTab) selectedTab.classList.add('selected');
 
-            // Hide all extra input sections first
             document.getElementById('cardDetails').classList.add('hidden');
             document.getElementById('upiDetails').classList.add('hidden');
 
@@ -1492,41 +3722,20 @@ if (!passwordRegex.test(password)) {
             }
         }
 
-
         async processPayment() {
             if (!this.selectedPayment) {
                 alert('Please select a payment method');
                 return;
             }
 
-            // Get delivery details (always visible now)
+            if (!this.validateCheckoutForm()) {
+                return;
+            }
+
             const deliveryName = document.getElementById('deliveryName').value.trim();
             const deliveryPhone = document.getElementById('deliveryPhone').value.trim();
             const deliveryAddress = document.getElementById('deliveryAddress').value.trim();
             const deliveryCity = document.getElementById('deliveryCity').value.trim();
-
-            if (!deliveryName || !deliveryPhone || !deliveryAddress || !deliveryCity) {
-                alert('Please fill delivery details');
-                return;
-            }
-
-            // Extra validation for payment type
-            if (this.selectedPayment === 'card') {
-                const cardNumber = document.getElementById('cardNumber').value.trim();
-                const cardExpiry = document.getElementById('cardExpiry').value.trim();
-                const cardCVV = document.getElementById('cardCVV').value.trim();
-
-                if (!cardNumber || !cardExpiry || !cardCVV) {
-                    alert('Please fill all card details');
-                    return;
-                }
-            } else if (this.selectedPayment === 'upi') {
-                const upiId = document.getElementById('upiId').value.trim();
-                if (!upiId) {
-                    alert('Please enter your UPI ID');
-                    return;
-                }
-            }
 
             try {
                 const subtotal = this.cart.reduce((sum, item) => sum + item.price, 0);
@@ -1536,7 +3745,7 @@ if (!passwordRegex.test(password)) {
 
                 const orderData = {
                     userId: this.currentUser.id,
-                    restaurantId: this.currentRestaurant.id,
+                    restaurantId: this.cart[0].restaurantId,
                     totalAmount,
                     tax,
                     deliveryFee: 50,
@@ -1551,12 +3760,10 @@ if (!passwordRegex.test(password)) {
                     }))
                 };
 
-                // Create the order
                 const order = await this.apiCall('/orders', 'POST', orderData);
 
-                // Map our frontend methods to backend’s expected names
                 let backendPaymentMethod = this.selectedPayment;
-                if (backendPaymentMethod === 'upi') backendPaymentMethod = 'wallet'; // since backend used "wallet"
+                if (backendPaymentMethod === 'upi') backendPaymentMethod = 'wallet';
 
                 const paymentData = {
                     orderId: order.id,
@@ -1567,27 +3774,22 @@ if (!passwordRegex.test(password)) {
 
                 await this.apiCall('/payments/process', 'POST', paymentData);
 
-                console.log("Order object:", order);
-                console.log("Payment data being sent:", paymentData);
-
-                // Success modal
-                document.getElementById('orderConfirmation').textContent = 'Order ID: ' + order.id;
+                document.getElementById('orderConfirmation').textContent = 'Order ID: #' + order.id;
                 document.getElementById('successModal').classList.remove('hidden');
+                
                 this.cart = [];
                 this.updateCart();
                 this.clearCheckout();
             } catch (e) {
-                console.error('Payment error:', e);
+                console.error('Payment process failed:', e);
                 alert('Payment failed: ' + (e.message || 'Please try again.'));
             }
         }
-
 
         clearCheckout() {
             document.getElementById('deliveryName').value = '';
             document.getElementById('deliveryPhone').value = '';
             document.getElementById('deliveryAddress').value = '';
-            document.getElementById('deliveryCity').value = '';
             this.selectedPayment = null;
             document.querySelectorAll('.payment-option').forEach(el => el.classList.remove('selected'));
         }
@@ -1601,6 +3803,7 @@ if (!passwordRegex.test(password)) {
             this.hidePage('home');
             this.hidePage('checkout');
             this.hidePage('profile');
+            this.hidePage('admin');
             this.showPage('orders');
             await this.loadOrders();
         }
@@ -1609,6 +3812,7 @@ if (!passwordRegex.test(password)) {
             this.hidePage('home');
             this.hidePage('orders');
             this.hidePage('checkout');
+            this.hidePage('admin');
             this.showPage('profile');
             await this.loadProfile();
         }
@@ -1616,26 +3820,23 @@ if (!passwordRegex.test(password)) {
         async loadProfile() {
             if (!this.currentUser) return;
 
-            // Set avatar initial
             const initial = this.currentUser.name ? this.currentUser.name.charAt(0).toUpperCase() : 'U';
             document.getElementById('profileAvatar').textContent = initial;
             document.getElementById('profileName').textContent = this.currentUser.name || 'User';
             document.getElementById('profileEmail').textContent = this.currentUser.email || '';
 
-            // Set profile fields
             document.getElementById('displayName').textContent = this.currentUser.name || '-';
             document.getElementById('displayEmail').textContent = this.currentUser.email || '-';
             document.getElementById('displayPhone').textContent = this.currentUser.phone || '-';
             document.getElementById('displayAddress').textContent = this.currentUser.address || '-';
             document.getElementById('displayCity').textContent = this.currentUser.city || "-";
 
-            // Set edit fields
             document.getElementById('editName').value = this.currentUser.name || '';
             document.getElementById('editEmail').value = this.currentUser.email || '';
             document.getElementById('editPhone').value = this.currentUser.phone || '';
             document.getElementById('editAddress').value = this.currentUser.address || '';
             document.getElementById('editCity').value = this.currentUser.city || "";
-            // Load statistics
+            
             try {
                 const orders = await this.apiCall(`/orders/user/${this.currentUser.id}`);
                 document.getElementById('totalOrders').textContent = orders.length;
@@ -1643,7 +3844,6 @@ if (!passwordRegex.test(password)) {
                 document.getElementById('totalOrders').textContent = '0';
             }
 
-            // Set member since date
             if (this.currentUser.createdAt) {
                 const date = new Date(this.currentUser.createdAt);
                 document.getElementById('memberSince').textContent = date.toLocaleDateString('en-IN', {
@@ -1671,13 +3871,11 @@ if (!passwordRegex.test(password)) {
             document.getElementById('saveBtn').style.display = 'none';
             document.getElementById('cancelBtn').style.display = 'none';
 
-            // Reset values
             document.getElementById('editName').value = this.currentUser.name || '';
             document.getElementById('editEmail').value = this.currentUser.email || '';
             document.getElementById('editPhone').value = this.currentUser.phone || '';
             document.getElementById('editAddress').value = this.currentUser.address || '';
             document.getElementById('editCity').value = this.currentUser.city || '';
-
         }
 
         async saveProfile() {
@@ -1727,83 +3925,690 @@ if (!passwordRegex.test(password)) {
                     const statusClass = `status-${order.status.toLowerCase()}`;
                     const subtotal = order.totalAmount - order.tax - order.deliveryFee;
 
+                    const stepClass = (current, step) => {
+                        const states = ['pending', 'confirmed', 'preparing', 'out', 'delivered'];
+                        const curIdx = states.indexOf(current.toLowerCase());
+                        const stepIdx = states.indexOf(step.toLowerCase());
+                        if (curIdx > stepIdx) return 'completed';
+                        if (curIdx === stepIdx) return 'active';
+                        return '';
+                    };
+
+                    const fillPercentage = (current) => {
+                        const states = ['pending', 'confirmed', 'preparing', 'out', 'delivered'];
+                        const idx = states.indexOf(current.toLowerCase());
+                        if (idx === -1) return 0;
+                        return (idx / (states.length - 1)) * 100;
+                    };
+
                     return `
-                <div class="order-card">
-                    <div class="order-header">
-                        <div>
-                            <div class="order-id">Order #${order.id}</div>
-                            <div style="font-size: 12px; color: #999;">${new Date(order.createdAt).toLocaleString()}</div>
-                        </div>
-                        <div class="order-status ${statusClass}">${order.status.toUpperCase()}</div>
-                    </div>
-
-                    <div class="order-details">
-                        <h4 style="margin-bottom: 10px;">Items Ordered:</h4>
-                        ${order.items && order.items.length > 0 ? order.items.map(item => `
-                            <div class="order-item">
-                                <span>${item.name || (item.menuItem ? item.menuItem.name : 'Item')}</span>
-                                <span>₹${item.price}</span>
+                        <div class="order-card">
+                            <div class="order-header">
+                                <div>
+                                    <div class="order-id">Order #${order.id}</div>
+                                    <div style="font-size: 14px; font-weight: bold; color: #1a73e8; margin: 3px 0;">${order.restaurantName || 'Restaurant'}</div>
+                                    <div style="font-size: 12px; color: #999;">${new Date(order.createdAt).toLocaleString()}</div>
+                                </div>
+                                <div class="order-status ${statusClass}">${order.status.toUpperCase()}</div>
                             </div>
-                        `).join('') : '<p style="color: #999; padding: 10px 0;">No items found</p>'}
-                    </div>
 
-                    <div style="border-top: 1px solid #eee; padding-top: 10px; margin-top: 10px;">
-                        <div class="order-item">
-                            <span>Subtotal</span>
-                            <span>₹${subtotal.toFixed(0)}</span>
-                        </div>
-                        <div class="order-item">
-                            <span>Tax (5%)</span>
-                            <span>₹${order.tax}</span>
-                        </div>
-                        <div class="order-item">
-                            <span>Delivery Fee</span>
-                            <span>₹${order.deliveryFee}</span>
-                        </div>
-                        <div class="order-item" style="font-weight: bold; font-size: 16px; border-top: 1px solid #eee; padding-top: 8px; margin-top: 8px;">
-                            <span>Total</span>
-                            <span>₹${order.totalAmount}</span>
-                        </div>
-                    </div>
+                            <!-- Visual Stepper Progress Tracker or Cancelled Banner -->
+                            ${order.status.toLowerCase() === 'cancelled' ? `
+                                <div class="cancelled-banner" style="background: #fdf2f2; border: 1px solid #fde8e8; border-radius: 8px; padding: 15px; margin: 15px 0; display: flex; align-items: center; gap: 10px; color: #9b1c1c;">
+                                    <span style="font-size: 24px;">🛑</span>
+                                    <div>
+                                        <div style="font-weight: bold; font-size: 14px;">This order has been cancelled</div>
+                                        <div style="font-size: 12px; color: #c81e1e; margin-top: 4px;">
+                                            Cancelled At: ${order.cancelledAt ? new Date(order.cancelledAt).toLocaleString() : new Date(order.updatedAt).toLocaleString()}
+                                        </div>
+                                        <div style="font-size: 12px; color: #7f1d1d; margin-top: 4px; font-style: italic;">
+                                            Reason: ${order.cancellationReason || 'Not specified'}
+                                        </div>
+                                    </div>
+                                </div>
+                            ` : `
+                                <div class="stepper-container">
+                                    <div class="stepper-line"></div>
+                                    <div class="stepper-line-fill" style="width: ${fillPercentage(order.status)}%"></div>
+                                    
+                                    <div class="stepper-step ${stepClass(order.status, 'pending')}">
+                                        <div class="step-circle">1</div>
+                                        <div class="step-label">Placed</div>
+                                    </div>
+                                    <div class="stepper-step ${stepClass(order.status, 'confirmed')}">
+                                        <div class="step-circle">2</div>
+                                        <div class="step-label">Confirmed</div>
+                                    </div>
+                                    <div class="stepper-step ${stepClass(order.status, 'preparing')}">
+                                        <div class="step-circle">3</div>
+                                        <div class="step-label">Preparing</div>
+                                    </div>
+                                    <div class="stepper-step ${stepClass(order.status, 'out')}">
+                                        <div class="step-circle">4</div>
+                                        <div class="step-label">On the Way</div>
+                                    </div>
+                                    <div class="stepper-step ${stepClass(order.status, 'delivered')}">
+                                        <div class="step-circle">5</div>
+                                        <div class="step-label">Delivered</div>
+                                    </div>
+                                </div>
+                            `}
 
-                    <div class="delivery-info">
-                        <div class="delivery-address">
-                            <label>📍 Delivery Address:</label>
-                            <div>${order.deliveryAddress}</div>
-                        </div>
+                            <!-- Interactive Live Delivery Map -->
+                            ${(order.status.toLowerCase() === 'out' || order.status.toLowerCase() === 'delivered') ? `
+                                <div style="margin: 10px 0; font-weight: 600; font-size:13px; color:#ff6b6b;">
+                                    ${order.status.toLowerCase() === 'out' ? '🚴 Live Delivery Agent GPS Tracking:' : '📍 Order Completed Destination Map:'}
+                                </div>
+                                <div id="track-map-${order.id}" class="live-map-card"></div>
+                            ` : ''}
 
-                        ${order.estimatedDeliveryTime ? `
-                        <div class="delivery-time">
-                            <label>⏱️ Estimated Delivery:</label>
-                            <div>${new Date(order.estimatedDeliveryTime).toLocaleTimeString('en-IN', {hour: '2-digit', minute: '2-digit'})}</div>
-                        </div>
-                        ` : ''}
-
-                        ${order.deliveryAgent ? `
-                        <div class="delivery-agent">
-                            <div style="font-weight: bold; margin-bottom: 5px; color: #666;">🚴 Delivery Agent:</div>
-                            <div class="agent-info">
-                                <div class="agent-name">${order.deliveryAgent}</div>
+                            <div class="order-details" style="margin-top: 15px;">
+                                <h4 style="margin-bottom: 8px;">Items Ordered:</h4>
+                                ${order.items && order.items.length > 0 ? order.items.map(item => `
+                                    <div class="order-item">
+                                        <span>${item.name || (item.menuItem ? item.menuItem.name : 'Item')}</span>
+                                        <span>₹${item.price}</span>
+                                    </div>
+                                `).join('') : '<p style="color: #999; padding: 5px 0;">No items</p>'}
                             </div>
+
+                            <div style="border-top: 1px solid #eee; padding-top: 8px; margin-top: 10px;">
+                                <div class="order-item">
+                                    <span>Subtotal</span>
+                                    <span>₹${subtotal.toFixed(0)}</span>
+                                </div>
+                                <div class="order-item">
+                                    <span>Tax & Packaging (5%)</span>
+                                    <span>₹${order.tax}</span>
+                                </div>
+                                <div class="order-item">
+                                    <span>Delivery Fee</span>
+                                    <span>₹${order.deliveryFee}</span>
+                                </div>
+                                <div class="order-item" style="font-weight: bold; font-size: 15px; border-top: 1px solid #eee; padding-top: 8px; margin-top: 8px;">
+                                    <span>Total Amount</span>
+                                    <span>₹${order.totalAmount}</span>
+                                </div>
+                            </div>
+
+                            <div class="delivery-info">
+                                <div class="delivery-address">
+                                    <label>📍 Delivery Address:</label>
+                                    <div>${order.deliveryAddress}</div>
+                                </div>
+
+                                ${order.estimatedDeliveryTime ? `
+                                <div class="delivery-time">
+                                    <label>⏱️ Estimated Delivery:</label>
+                                    <div>${new Date(order.estimatedDeliveryTime).toLocaleTimeString('en-IN', {hour: '2-digit', minute: '2-digit'})}</div>
+                                </div>
+                                ` : ''}
+
+                                ${order.deliveryAgent ? `
+                                <div class="delivery-agent">
+                                    <div style="font-weight: bold; margin-bottom: 5px; color: #666;">🚴 Delivery Agent:</div>
+                                    <div class="agent-info">
+                                        <div class="agent-name">${order.deliveryAgent}</div>
+                                    </div>
+                                </div>
+                                ` : '<p style="color: #999; margin-top: 10px;">Delivery agent will be assigned soon</p>'}
+                            </div>
+                            
+                            ${['pending', 'confirmed', 'preparing'].includes(order.status.toLowerCase()) ? `
+                                <div style="display: flex; justify-content: flex-end; margin-top: 15px; border-top: 1px solid #eee; padding-top: 15px;">
+                                    <button class="btn btn-outline-danger" onclick="appInstance.confirmCancelOrder(${order.id})" style="border: 1px solid #dc3545; color: #dc3545; background: transparent; padding: 6px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#dc3545'; this.style.color='white'" onmouseout="this.style.background='transparent'; this.style.color='#dc3545'">
+                                        Cancel Order
+                                    </button>
+                                </div>
+                            ` : ''}
                         </div>
-                        ` : '<p style="color: #999; margin-top: 10px;">Delivery agent will be assigned soon</p>'}
-                    </div>
-                </div>
-            `;
+                    `;
                 }).join('');
+
+                // Initialize maps for orders on delivery
+                orders.forEach(order => {
+                    const status = order.status.toLowerCase();
+                    if (status === 'out' || status === 'delivered') {
+                        setTimeout(() => {
+                            this.initTrackingMap(order.id, order.restaurantName || "Restaurant", status);
+                        }, 200);
+                    }
+                });
+
             } catch (e) {
                 console.error('Failed to load orders:', e);
                 document.getElementById('ordersListContainer').innerHTML = '<p style="text-align: center; color: #ff6b6b; padding: 50px 0;">Failed to load orders. Please try again.</p>';
             }
         }
 
+        async confirmCancelOrder(orderId) {
+            const confirmCancel = confirm("Are you sure you want to cancel this order?");
+            if (!confirmCancel) return;
+            
+            const reason = prompt("Please provide a reason for cancellation (optional):");
+            if (reason === null) return; // User cancelled prompt
+            
+            try {
+                const url = `/orders/${orderId}/cancel` + (reason.trim() ? `?reason=${encodeURIComponent(reason.trim())}` : '');
+                await this.apiCall(url, 'POST');
+                this.showNotification(`Order #${orderId} has been successfully cancelled.`);
+                await this.loadOrders();
+            } catch (e) {
+                console.error("Cancel order failed:", e);
+                alert("Failed to cancel order: " + e.message);
+            }
+        }
+
+        /* Leaflet Live Route & GPS Simulation */
+        initTrackingMap(orderId, restaurantName, status) {
+            const mapId = `track-map-${orderId}`;
+            if (!document.getElementById(mapId)) return;
+
+            // Cleanup existing map if any
+            if (this.activeMaps[orderId]) {
+                clearInterval(this.activeMaps[orderId].intervalId);
+                try {
+                    this.activeMaps[orderId].map.remove();
+                } catch(e) {}
+                delete this.activeMaps[orderId];
+            }
+
+            // Mock unique coords with seeds
+            const seed = orderId * 0.0123;
+            const restLat = 12.9716 + (Math.sin(seed) * 0.012);
+            const restLng = 77.5946 + (Math.cos(seed) * 0.012);
+            
+            const custLat = 12.9716 + (Math.sin(seed + 1.5) * 0.01);
+            const custLng = 77.5946 + (Math.cos(seed + 1.5) * 0.01);
+
+            const map = L.map(mapId, { zoomControl: false }).setView([restLat, restLng], 14);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap'
+            }).addTo(map);
+
+            const restIcon = L.divIcon({ html: '🏪', className: 'div-icon-rest', iconSize: [28, 28] });
+            const custIcon = L.divIcon({ html: '🏠', className: 'div-icon-cust', iconSize: [28, 28] });
+            const bikeIcon = L.divIcon({ html: '🚴', className: 'div-icon-bike', iconSize: [30, 30] });
+
+            L.marker([restLat, restLng], { icon: restIcon }).addTo(map).bindPopup(restaurantName).openPopup();
+            L.marker([custLat, custLng], { icon: custIcon }).addTo(map).bindPopup("Your Home");
+
+            const route = L.polyline([[restLat, restLng], [custLat, custLng]], { color: '#ff6b6b', weight: 4, dashArray: '5, 8' }).addTo(map);
+
+            let agentMarker;
+            let intervalId = null;
+
+            if (status === 'out') {
+                agentMarker = L.marker([restLat, restLng], { icon: bikeIcon }).addTo(map);
+                
+                // Animate delivery agent marker from Restaurant to Customer (takes 20 seconds)
+                let step = 0;
+                const totalSteps = 40;
+                
+                intervalId = setInterval(() => {
+                    step++;
+                    const progress = step / totalSteps;
+                    const lat = restLat + (custLat - restLat) * progress;
+                    const lng = restLng + (custLng - restLng) * progress;
+                    
+                    agentMarker.setLatLng([lat, lng]);
+                    map.panTo([lat, lng]);
+
+                    if (step >= totalSteps) {
+                        clearInterval(intervalId);
+                        this.completeDeliverySimulation(orderId);
+                    }
+                }, 500);
+            } else {
+                // Already delivered
+                agentMarker = L.marker([custLat, custLng], { icon: bikeIcon }).addTo(map);
+                map.setView([custLat, custLng], 15);
+            }
+
+            this.activeMaps[orderId] = { map, marker: agentMarker, intervalId };
+            map.fitBounds(route.getBounds(), { padding: [30, 30] });
+        }
+
+        async completeDeliverySimulation(orderId) {
+            try {
+                console.log(`Automatic Delivery simulation reached destination. Updating Order #${orderId} status to DELIVERED...`);
+                await this.apiCall(`/orders/${orderId}/status?status=delivered`, 'PUT');
+            } catch(e) {
+                console.error("Auto-complete simulation update failed:", e);
+            }
+        }
+
+        /* Admin Panel / Simulator Controller */
+        async showAdmin() {
+            if (!this.currentUser || this.currentUser.role !== 'ADMIN') {
+                alert("Access Denied: Admin role required");
+                this.showHome();
+                return;
+            }
+            this.hidePage('landing');
+            this.hidePage('login');
+            this.hidePage('signup');
+            this.hidePage('home');
+            this.hidePage('orders');
+            this.hidePage('profile');
+            this.hidePage('checkout');
+            this.showPage('admin');
+            
+            await Promise.all([
+                this.loadAdminOrders(),
+                this.loadRestaurantStats()
+            ]);
+            this.initAdminSSE();
+        }
+
+        async loadRestaurantStats() {
+            try {
+                const restaurantListContainer = document.getElementById('adminRestaurantStatsList');
+                if (!restaurantListContainer) return;
+                
+                const [restaurants, allOrders] = await Promise.all([
+                    this.apiCall('/restaurants'),
+                    this.apiCall('/orders')
+                ]);
+
+                const orderCounts = {};
+                allOrders.forEach(order => {
+                    if (order.status && order.status.toLowerCase() !== 'cancelled') {
+                        const rId = order.restaurantId;
+                        orderCounts[rId] = (orderCounts[rId] || 0) + 1;
+                    }
+                });
+
+                if (restaurants.length === 0) {
+                    restaurantListContainer.innerHTML = '<p style="text-align:center; color:#999; padding:20px;">No restaurants found</p>';
+                    return;
+                }
+
+                restaurantListContainer.innerHTML = restaurants.map(r => {
+                    const count = orderCounts[r.id] || 0;
+                    return `
+                        <div onclick="appInstance.showRestaurantAnalytics(${r.id}, '${r.name.replace(/'/g, "\\'")}')" 
+                             style="background:#f8f9fa; border:1px solid #dadce0; border-radius:8px; padding:12px; margin-bottom:10px; display:flex; flex-direction:column; gap:5px; cursor:pointer; transition: transform 0.2s, box-shadow 0.2s;"
+                             onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 10px rgba(0,0,0,0.1)';" 
+                             onmouseout="this.style.transform='none'; this.style.boxShadow='none';">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <strong style="color:#202124; font-size:14px; font-weight:600;">${r.name}</strong>
+                                <span style="font-size:12px; font-weight:bold; color:#ff6b6b; background:#ffe8e8; padding:2px 8px; border-radius:12px;">${count} orders</span>
+                            </div>
+                            <div style="font-size:12px; color:#5f6368; display:flex; justify-content:space-between;">
+                                <span>Cuisine: ${r.cuisine}</span>
+                                <span style="color:#ffb300; font-weight:500;">⭐ ${r.rating}</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch(e) {
+                console.error("Failed to load restaurant stats:", e);
+                const container = document.getElementById('adminRestaurantStatsList');
+                if (container) container.innerHTML = `<p style="color:red; text-align:center; padding:10px;">Failed to load stats</p>`;
+            }
+        }
+
+        async showRestaurantAnalytics(restaurantId, restaurantName) {
+            try {
+                const modal = document.getElementById('analyticsModal');
+                const title = document.getElementById('analyticsTitle');
+                const body = document.getElementById('analyticsBody');
+                
+                title.textContent = `${restaurantName} - Performance Analytics`;
+                body.innerHTML = `
+                    <div style="text-align:center; padding: 40px 0;">
+                        <div class="spinner"></div>
+                        <p style="margin-top:15px; color:#5f6368; font-size:14px;">Fetching performance stats...</p>
+                    </div>
+                `;
+                modal.classList.remove('hidden');
+
+                const data = await this.apiCall(`/orders/restaurant/${restaurantId}/analytics`);
+                
+                let dishSummaryHtml = '';
+                if (!data.dishSummary || data.dishSummary.length === 0) {
+                    dishSummaryHtml = `<p style="text-align:center; color:#999; padding:20px; font-size:13px; background:#f8f9fa; border-radius:8px; border:1px dashed #dadce0;">No dishes ordered yet</p>`;
+                } else {
+                    dishSummaryHtml = data.dishSummary.map(dish => {
+                        const pct = dish.percentage || 0;
+                        return `
+                            <div style="margin-bottom: 15px; padding: 10px 12px; background: #f8f9fa; border-radius: 8px; border: 1px solid #e8eaed;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                                    <span style="font-weight:600; color:#202124; font-size:14px;">${dish.dishName}</span>
+                                    <span style="font-weight:bold; color:#ff6b6b; font-size:13px;">${dish.orderCount} ordered</span>
+                                </div>
+                                <div style="display:flex; align-items:center; gap:10px;">
+                                    <div style="flex-grow:1; background:#e8eaed; height:8px; border-radius:4px; overflow:hidden;">
+                                        <div style="background:linear-gradient(90deg, #ff6b6b, #ff8787); width:${pct}%; height:100%; border-radius:4px;"></div>
+                                    </div>
+                                    <span style="font-size:12px; color:#5f6368; font-weight:600; min-width:38px; text-align:right;">${pct}%</span>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+
+                body.innerHTML = `
+                    <div style="font-family:'Outfit', 'Segoe UI', Roboto, sans-serif;">
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:25px;">
+                            <div style="background: linear-gradient(135deg, #fff5f5, #ffe8e8); border: 1px solid #ffccd5; border-radius: 12px; padding: 16px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+                                <div style="font-size: 11px; color: #b82c3c; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px;">Total Orders</div>
+                                <div style="font-size: 28px; font-weight: 800; color: #ff6b6b; line-height: 1;">${data.totalOrders}</div>
+                            </div>
+                            <div style="background: linear-gradient(135deg, #eef9f2, #d5eedf); border: 1px solid #a3e0b9; border-radius: 12px; padding: 16px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+                                <div style="font-size: 11px; color: #1e5c37; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px;">Total Revenue</div>
+                                <div style="font-size: 28px; font-weight: 800; color: #28a745; line-height: 1;">₹${data.totalRevenue}</div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 style="font-weight:700; color:#202124; font-size:14px; margin:0 0 15px 0; border-left: 4px solid #4a6fa5; padding-left: 10px; text-transform: uppercase; letter-spacing:0.5px;">Dish-wise Order Summary</h4>
+                            <div style="max-height: 280px; overflow-y: auto; padding-right: 5px;">
+                                ${dishSummaryHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } catch (e) {
+                console.error("Failed to fetch analytics:", e);
+                document.getElementById('analyticsBody').innerHTML = `
+                    <p style="color:red; text-align:center; padding:20px;">Failed to load analytics: ${e.message}</p>
+                `;
+            }
+        }
+
+        closeAnalyticsModal() {
+            document.getElementById('analyticsModal').classList.add('hidden');
+        }
+
+        async loadAdminOrders() {
+            try {
+                const p1 = this.apiCall('/orders/status/pending');
+                const p2 = this.apiCall('/orders/status/confirmed');
+                const p3 = this.apiCall('/orders/status/preparing');
+                const p4 = this.apiCall('/orders/status/out');
+                const p5 = this.apiCall('/orders/status/cancelled');
+                
+                const [pending, confirmed, preparing, out, cancelled] = await Promise.all([p1, p2, p3, p4, p5]);
+                const activeOrders = [...pending, ...confirmed, ...preparing, ...out, ...cancelled];
+                activeOrders.sort((a, b) => b.id - a.id);
+
+                const listContainer = document.getElementById('adminOrderList');
+                if (activeOrders.length === 0) {
+                    listContainer.innerHTML = '<p style="text-align: center; color: #999; padding: 40px 0;">No active or cancelled orders in database</p>';
+                    return;
+                }
+
+                const getBadgeStyle = (status) => {
+                    switch(status.toLowerCase()) {
+                        case 'pending': return 'background:#fff9db; color:#f08c00;';
+                        case 'confirmed': return 'background:#e3faf2; color:#0ca678;';
+                        case 'preparing': return 'background:#e8f7ff; color:#1c7ed6;';
+                        case 'out': return 'background:#fff4e6; color:#d9480f;';
+                        case 'delivered': return 'background:#ebfbee; color:#2b8a3e;';
+                        case 'cancelled': return 'background:#f1f3f5; color:#495057;';
+                        default: return 'background:#fff5f5; color:#ff6b6b;';
+                    }
+                };
+
+                listContainer.innerHTML = activeOrders.map(o => `
+                    <div class="admin-order-item ${this.adminSelectedOrder && this.adminSelectedOrder.id === o.id ? 'selected' : ''}" 
+                         onclick="appInstance.selectAdminOrder(${o.id})">
+                        <div class="order-item-header">
+                            <span>Order #${o.id}</span>
+                            <span style="color:#ff6b6b; font-weight:bold;">₹${o.totalAmount}</span>
+                        </div>
+                        <div style="font-size:12px; color:#555; margin-bottom:5px; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">Addr: ${o.deliveryAddress}</div>
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-size:11px; color:#888;">${o.createdAt ? new Date(o.createdAt).toLocaleTimeString() : ''}</span>
+                            <span style="font-size:10px; font-weight:bold; ${getBadgeStyle(o.status)} padding:2px 6px; border-radius:4px; text-transform:uppercase;">${o.status}</span>
+                        </div>
+                    </div>
+                `).join('');
+            } catch(e) {
+                console.error("Failed to load admin stream orders:", e);
+                document.getElementById('adminOrderList').innerHTML = '<p style="color:red; padding:15px;">Failed to load stream</p>';
+            }
+        }
+
+        async selectAdminOrder(orderId) {
+            try {
+                this.adminSelectedOrder = await this.apiCall(`/orders/${orderId}`);
+                
+                // Fetch restaurant details dynamically
+                let restaurantName = this.adminSelectedOrder.restaurantName || 'Unknown Restaurant';
+
+                // Fetch customer details dynamically
+                let customerName = 'Unknown Customer';
+                if (this.adminSelectedOrder.userId) {
+                    try {
+                        const user = await this.apiCall(`/users/${this.adminSelectedOrder.userId}`);
+                        if (user) {
+                            customerName = user.name;
+                        }
+                    } catch (err) {
+                        console.error("Failed to load user details for order:", err);
+                    }
+                }
+
+                // Redraw orders list to update selection styles
+                document.querySelectorAll('.admin-order-item').forEach(el => el.classList.remove('selected'));
+                this.loadAdminOrders();
+
+                const detailsContainer = document.getElementById('adminOrderDetails');
+                const o = this.adminSelectedOrder;
+
+                const itemsHtml = o.items ? o.items.map(item => `
+                    <li style="display:flex; justify-content:space-between; margin-bottom:5px; font-size:13px;">
+                        <span>${item.name || 'Food Item'}</span>
+                        <span style="font-weight:600;">x1 - ₹${item.price}</span>
+                    </li>
+                `).join('') : '<li>No items.</li>';
+
+                detailsContainer.innerHTML = `
+                    <div style="border-bottom: 2px solid #eee; padding-bottom: 12px; margin-bottom: 20px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <h2 style="font-weight:bold; color:#333; margin:0;">Order #${o.id}</h2>
+                            <span style="font-size:12px; font-weight:bold; background:#e8f0fe; color:#1a73e8; padding:4px 8px; border-radius:4px;">${restaurantName}</span>
+                        </div>
+                        <div style="font-size:12px; color:#555; margin-top:8px;">Customer: <strong>${customerName}</strong> | Placed: ${new Date(o.createdAt).toLocaleString()}</div>
+                    </div>
+
+                    ${o.status.toLowerCase() === 'cancelled' ? `
+                        <div style="background: #fdf2f2; border: 1px solid #fde8e8; border-radius: 8px; padding: 15px; margin-bottom: 20px; color: #9b1c1c;">
+                            <h4 style="font-weight:bold; color:#9b1c1c; margin:0 0 5px 0; font-size:13px; text-transform: uppercase;">🛑 Order Cancelled</h4>
+                            <div style="font-size:13px; font-weight:600; margin-bottom:4px;">Cancelled At: <span style="font-weight:normal; color:#c81e1e;">${o.cancelledAt ? new Date(o.cancelledAt).toLocaleString() : new Date(o.updatedAt).toLocaleString()}</span></div>
+                            <div style="font-size:13px; font-weight:600;">Reason: <span style="font-weight:normal; color:#7f1d1d; font-style:italic;">${o.cancellationReason || 'Not specified'}</span></div>
+                        </div>
+                    ` : ''}
+
+                    <div style="margin-bottom: 15px;">
+                        <h4 style="font-weight:bold; color:#666; margin-bottom:5px; font-size:13px;">Delivery Address</h4>
+                        <p style="font-size:13px; color:#333;">${o.deliveryAddress}</p>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="font-weight:bold; color:#666; margin-bottom:8px; font-size:13px;">Ordered Items</h4>
+                        <ul style="list-style:none; padding:0; color:#333;">
+                            ${itemsHtml}
+                        </ul>
+                        <div style="display:flex; justify-content:space-between; font-weight:bold; border-top:1px solid #eee; margin-top:12px; padding-top:8px;">
+                            <span>Grand Total</span>
+                            <span style="color:#ff6b6b; font-size:16px;">₹${o.totalAmount}</span>
+                        </div>
+                    </div>
+
+                    ${o.status.toLowerCase() !== 'cancelled' ? `
+                    <div class="simulator-actions">
+                        <h4 style="font-weight:bold; color:#ff6b6b; margin-bottom:8px; font-size:13px;">Simulate Order Status Changes</h4>
+                        <p style="font-size:11px; color:#888; margin-bottom:15px;">Use buttons to trigger state changes. Status updates are broadcast in real-time to the customer screen.</p>
+                        
+                        <div class="action-grid">
+                            <button class="btn btn-primary" onclick="appInstance.updateOrderStatusAdmin(${o.id}, 'confirmed')" ${o.status.toLowerCase() !== 'pending' ? 'disabled' : ''}>1. Confirm Order</button>
+                            <button class="btn btn-secondary" onclick="appInstance.updateOrderStatusAdmin(${o.id}, 'preparing')" ${o.status.toLowerCase() !== 'confirmed' ? 'disabled' : ''}>2. Start Cooking</button>
+                            <button class="btn" style="background:#fd7e14; color:white;" onclick="appInstance.updateOrderStatusAdmin(${o.id}, 'out')" ${o.status.toLowerCase() !== 'preparing' ? 'disabled' : ''}>3. Send Out (Delivery)</button>
+                            <button class="btn" style="background:#28a745; color:white;" onclick="appInstance.updateOrderStatusAdmin(${o.id}, 'delivered')" ${o.status.toLowerCase() !== 'out' ? 'disabled' : ''}>4. Mark Delivered</button>
+                        </div>
+
+                        <div style="margin-top:20px; border-top: 1px solid #eee; padding-top:15px;">
+                            <h4 style="font-weight:bold; color:#666; margin-bottom:8px; font-size:13px;">Assign Agent</h4>
+                            <div style="display:flex; gap:10px; align-items:center;">
+                                <div style="font-size:13px;">Agent: <strong style="color:#ff6b6b;">${o.deliveryAgent || 'None Assigned'}</strong></div>
+                                <button class="btn" onclick="appInstance.assignAgentAdmin(${o.id})" style="padding:5px 10px; font-size:11px; background:#f1f3f4; color:#333; border:1px solid #ddd;">Reassign Agent</button>
+                            </div>
+                        </div>
+                    </div>
+                    ` : ''}
+                `;
+            } catch(e) {
+                console.error("Select admin order failed:", e);
+            }
+        }
+
+        async updateOrderStatusAdmin(orderId, status) {
+            try {
+                await this.apiCall(`/orders/${orderId}/status?status=${status}`, 'PUT');
+                await this.selectAdminOrder(orderId);
+                this.showNotification(`Order #${orderId} marked as ${status.toUpperCase()}`);
+            } catch(e) {
+                alert("Failed to update status: " + e.message);
+            }
+        }
+
+        async assignAgentAdmin(orderId) {
+            const agent = prompt("Enter driver name to assign (e.g. Arun Kumar, Sowmiya K):");
+            if (!agent) return;
+            try {
+                await this.apiCall(`/orders/${orderId}/assign-agent?agentName=${encodeURIComponent(agent)}`, 'PUT');
+                await this.selectAdminOrder(orderId);
+                this.showNotification(`Assigned delivery partner ${agent} to Order #${orderId}`);
+            } catch(e) {
+                alert("Failed to assign agent: " + e.message);
+            }
+        }
+
+        updateAdminLinkVisibility() {
+            const isAdmin = this.currentUser && this.currentUser.role === 'ADMIN';
+            const adminLinks = ['navAdmin', 'navAdmin2', 'navAdmin3', 'navAdmin4', 'navAdmin5'];
+            adminLinks.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    if (isAdmin) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                }
+            });
+
+            const customerLinks = [
+                'navOrders', 'navOrders2', 'navOrders3', 'navOrders4',
+                'navCart', 'navCart2', 'navCart3', 'navCart4'
+            ];
+            customerLinks.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    if (isAdmin) {
+                        el.classList.add('hidden');
+                    } else {
+                        el.classList.remove('hidden');
+                    }
+                }
+            });
+        }
+
+        saveGoogleClientId() {
+            const val = document.getElementById('googleClientIdInput').value.trim();
+            if (!val) {
+                alert("Please enter a valid Client ID.");
+                return;
+            }
+            localStorage.setItem('googleClientId', val);
+            this.showNotification("Google Client ID saved!");
+            this.closeGoogleAuthSim();
+            this.initGoogleGSI();
+        }
+
+        initGoogleGSI() {
+            const clientId = localStorage.getItem('googleClientId');
+            if (!clientId) {
+                console.log("No Google Client ID configured. Standard GIS buttons will not initialize.");
+                return;
+            }
+            
+            // Set up input value in modal
+            const input = document.getElementById('googleClientIdInput');
+            if (input) input.value = clientId;
+
+            try {
+                if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
+                    google.accounts.id.initialize({
+                        client_id: clientId,
+                        callback: (response) => this.handleGoogleCredentialResponse(response)
+                    });
+                    
+                    const loginBtnDiv = document.getElementById('googleBtnDiv');
+                    if (loginBtnDiv) {
+                        google.accounts.id.renderButton(loginBtnDiv, { theme: 'outline', size: 'large', width: '100%' });
+                    }
+                    
+                    const signupBtnDiv = document.getElementById('googleBtnDivSignup');
+                    if (signupBtnDiv) {
+                        google.accounts.id.renderButton(signupBtnDiv, { theme: 'outline', size: 'large', width: '100%' });
+                    }
+                    
+                    console.log("Google Identity Services initialized successfully with configured Client ID.");
+                } else {
+                    console.log("Google Accounts script not loaded yet. Retrying in 1s...");
+                    setTimeout(() => this.initGoogleGSI(), 1000);
+                }
+            } catch(e) {
+                console.error("Failed to initialize Google Identity Services:", e);
+            }
+        }
+
+        handleGoogleCredentialResponse(response) {
+            try {
+                const token = response.credential;
+                const base64Url = token.split('.')[1];
+                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
+
+                const payload = JSON.parse(jsonPayload);
+                console.log("Decoded Google Token payload:", payload);
+                
+                const googleAccount = {
+                    name: payload.name || "Google User",
+                    email: payload.email,
+                    avatar: payload.name ? payload.name.charAt(0).toUpperCase() : "G",
+                    phone: "",
+                    address: "",
+                    city: ""
+                };
+                
+                this.selectGoogleAccount(googleAccount);
+            } catch(e) {
+                console.error("Failed to decode Google Token:", e);
+                alert("Authentication failed: Could not decode Google ID token.");
+            }
+        }
+
         init() {
+            this.setupSignupValidation();
+            this.setupCheckoutValidation();
             const savedUser = localStorage.getItem('currentUser');
             if (savedUser) {
                 this.currentUser = JSON.parse(savedUser);
                 this.isLoggedIn = true;
+                this.updateAdminLinkVisibility();
                 this.showHome();
+            } else {
+                this.updateAdminLinkVisibility();
             }
+            this.initGoogleGSI();
         }
     }
 

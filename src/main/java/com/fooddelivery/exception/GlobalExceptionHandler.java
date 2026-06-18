@@ -20,6 +20,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(org.springframework.web.context.request.async.AsyncRequestTimeoutException.class)
+    public Object handleAsyncRequestTimeoutException(org.springframework.web.context.request.async.AsyncRequestTimeoutException ex) {
+        // Let Spring's standard async timeout handling close the event stream connection
+        return null;
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse> handleGlobalException(Exception ex, WebRequest request) {
         ApiResponse response = new ApiResponse(

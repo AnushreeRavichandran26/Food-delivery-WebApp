@@ -17,11 +17,44 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
+    private OtpService otpService;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @jakarta.annotation.PostConstruct
+    public void seedAdminUser() {
+        if (!userRepository.existsByEmail("admin@fooddelivery.com")) {
+            User admin = new User();
+            admin.setName("Admin User");
+            admin.setEmail("admin@fooddelivery.com");
+            admin.setPhone("1234567890");
+            admin.setPassword(passwordEncoder.encode("AdminPassword123!"));
+            admin.setRole("ADMIN");
+            admin.setAddress("Admin HQ");
+            admin.setCity("Admin City");
+            admin.setPostalCode("12345");
+            admin.setCreatedAt(LocalDateTime.now());
+            userRepository.save(admin);
+        }
+    }
 
     public User registerUser(User user) {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new RuntimeException("Email already exists");
+        }
+        
+        // Google authentication simulation bypass check
+        boolean isGoogleSim = "GoogleAuthSimulatedPassword123!".equals(user.getPassword());
+        if (!isGoogleSim) {
+            if (!otpService.isEmailVerified(user.getEmail())) {
+                throw new RuntimeException("Email verification via OTP is required before registration");
+            }
+            otpService.consumeEmailVerification(user.getEmail());
+        }
+
+        if (user.getRole() == null || user.getRole().trim().isEmpty()) {
+            user.setRole("CUSTOMER");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setCreatedAt(LocalDateTime.now());
