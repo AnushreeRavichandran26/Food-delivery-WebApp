@@ -1566,18 +1566,9 @@
         <h2>Welcome Back</h2>
         <p class="subtitle">Login to continue ordering</p>
         
-        <div id="googleBtnDiv" style="margin-bottom: 10px; width: 100%; display: flex; justify-content: center;"></div>
-        <button class="google-btn" onclick="appInstance.openGoogleAuthSim('login')">
-            <svg viewBox="0 0 24 24">
-                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22c-.62-.62-1.04-1.37-1.21-2.22z"/>
-                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-            </svg>
-            Bypass / Simulate Google Login
-        </button>
-        
-        <div style="text-align: center; margin: 15px 0; color: #999; font-size: 13px;">or use password login</div>
+        <!-- Real Google Sign-In button rendered by Google Identity Services SDK -->
+        <div id="googleBtnDiv" style="margin-bottom: 6px; width: 100%; display: flex; justify-content: center; min-height: 44px;"></div>
+        <div style="text-align: center; margin: 14px 0; color: #999; font-size: 13px;">or use password login</div>
 
         <div class="form-group">
             <label>Email</label>
@@ -1599,18 +1590,9 @@
         <h2>Create Account</h2>
         <p class="subtitle">Join and start ordering now</p>
 
-        <div id="googleBtnDivSignup" style="margin-bottom: 10px; width: 100%; display: flex; justify-content: center;"></div>
-        <button class="google-btn" onclick="appInstance.openGoogleAuthSim('signup')">
-            <svg viewBox="0 0 24 24">
-                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22c-.62-.62-1.04-1.37-1.21-2.22z"/>
-                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-            </svg>
-            Bypass / Simulate Google Signup
-        </button>
-        
-        <div style="text-align: center; margin: 15px 0; color: #999; font-size: 13px;">or use registration form</div>
+        <!-- Real Google Sign-In button rendered by Google Identity Services SDK -->
+        <div id="googleBtnDivSignup" style="margin-bottom: 6px; width: 100%; display: flex; justify-content: center; min-height: 44px;"></div>
+        <div style="text-align: center; margin: 14px 0; color: #999; font-size: 13px;">or fill the form below</div>
 
         <div class="form-group">
             <label>Name</label>
@@ -2016,42 +1998,7 @@
     <button class="btn btn-primary" onclick="appInstance.handleSuccessOrder()" style="margin-top: 15px; width: 100%;">Monitor Real-time Delivery</button>
 </div>
 
-<!-- Google Account Chooser & Configuration Modal -->
-<div id="googleAuthModal" class="google-modal hidden">
-    <div class="google-modal-content">
-        <div class="google-modal-header">
-            <svg viewBox="0 0 24 24">
-                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22c-.62-.62-1.04-1.37-1.21-2.22z"/>
-                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-            </svg>
-            <h3>Google Account Integration</h3>
-            <p style="font-size:13px; color:#5f6368; margin-top:5px;">Configure real Google Sign-In or use offline simulation</p>
-        </div>
-        
-        <!-- Google Client ID Setup -->
-        <div style="margin: 15px 0; padding: 15px; background: #f8f9fa; border: 1px solid #dadce0; border-radius: 8px; text-align: left;">
-            <h4 style="font-size: 14px; margin-bottom: 8px; color: #202124;">Real Google Auth Setup</h4>
-            <div class="form-group" style="margin-bottom: 10px;">
-                <label style="font-size: 11px; color: #5f6368; display: block; margin-bottom: 4px;">Google Client ID</label>
-                <input type="text" id="googleClientIdInput" placeholder="xxxx-xxxx.apps.googleusercontent.com" style="width: 100%; padding: 8px; border: 1px solid #dadce0; border-radius: 4px; font-size: 12px;">
-            </div>
-            <button class="btn btn-primary" onclick="appInstance.saveGoogleClientId()" style="width: 100%; padding: 8px; font-size: 12px;">Save Client ID & Initialize</button>
-            <p style="font-size: 10px; color: #70757a; margin-top: 6px;">Note: Saves locally to your browser. Re-renders SDK buttons.</p>
-        </div>
-
-        <div style="text-align: center; margin: 15px 0; color: #70757a; font-size: 12px; font-weight: 500; position: relative;">
-            <span style="background: #fff; padding: 0 10px; z-index: 1; position: relative;">OR BYPASS WITH SIMULATION</span>
-            <div style="position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: #e0e0e0; z-index: 0;"></div>
-        </div>
-
-        <div class="google-account-list" id="googleAccountList">
-            <!-- Rendered in script -->
-        </div>
-        <button class="btn" onclick="appInstance.closeGoogleAuthSim()" style="background:#f1f3f4; color:#3c4043; border:none; margin-top:15px; width:100%;">Cancel</button>
-    </div>
-</div>
+<!-- (Google modal removed — Client ID is now hardcoded in the app) -->
 
 <!-- Restaurant Analytics Modal -->
 <div id="analyticsModal" class="menu-modal hidden" style="z-index: 4000;">
@@ -2262,82 +2209,39 @@
             }, 200);
         }
 
-        /* Google Accounts Chooser Popup Simulator */
-        openGoogleAuthSim(mode) {
-            this.googleAuthMode = mode;
-            document.getElementById('googleAuthModal').classList.remove('hidden');
-            
-            const savedClientId = localStorage.getItem('googleClientId');
-            const clientIdInput = document.getElementById('googleClientIdInput');
-            if (clientIdInput && savedClientId) {
-                clientIdInput.value = savedClientId;
-            }
-
-            const list = document.getElementById('googleAccountList');
-            const mockAccounts = [
-                { name: "Alex Smith", email: "alex.smith@gmail.com", avatar: "A", phone: "9876543210", address: "12th Cross Rd, Indiranagar", city: "Bangalore" },
-                { name: "Priya Patel", email: "priya.patel@gmail.com", avatar: "P", phone: "9823456789", address: "100 Feet Rd, Hal 2nd Stage, Indiranagar", city: "Bangalore" },
-                { name: "John Doe", email: "john.doe@gmail.com", avatar: "J", phone: "9765432109", address: "Brigade Road, Ashok Nagar", city: "Bangalore" }
-            ];
-            
-            list.innerHTML = mockAccounts.map(acc => `
-                <div class="google-account-item" onclick="appInstance.selectGoogleAccount(${JSON.stringify(acc).replace(/"/g, '&quot;')})">
-                    <div class="google-avatar">${acc.avatar}</div>
-                    <div class="google-account-info">
-                        <div class="account-name">${acc.name}</div>
-                        <div class="account-email">${acc.email}</div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        closeGoogleAuthSim() {
-            document.getElementById('googleAuthModal').classList.add('hidden');
-        }
-
+        /* Google Sign-In: handles real credential response from Google Identity Services */
         async selectGoogleAccount(account) {
-            this.closeGoogleAuthSim();
             try {
                 const signupData = {
                     name: account.name,
                     email: account.email,
-                    phone: account.phone,
-                    address: account.address,
-                    city: account.city,
-                    password: "GoogleAuthSimulatedPassword123!"
+                    phone: account.phone || "",
+                    address: account.address || "",
+                    city: account.city || "",
+                    password: "GoogleOAuth_" + btoa(account.email).replace(/=/g, '')
                 };
 
-                // Try registering. If user exists, backend will throw error which we catch.
+                // Try registering first — silently ignore if account already exists
                 try {
                     await this.apiCall('/users/register', 'POST', signupData);
                 } catch(e) {
-                    console.log("Account already registered, logging in directly...");
+                    // Account already exists — proceed to login
                 }
 
-                // Autologin
+                // Login with the deterministic Google password
                 this.currentUser = await this.apiCall('/users/login', 'POST', {
                     email: account.email,
-                    password: "GoogleAuthSimulatedPassword123!"
+                    password: signupData.password
                 });
 
                 localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
                 this.isLoggedIn = true;
                 this.updateAdminLinkVisibility();
-                
-                // If on signup page, populate fields visually before redirecting
-                if (this.googleAuthMode === 'signup') {
-                    document.getElementById('signupName').value = account.name;
-                    document.getElementById('signupEmail').value = account.email;
-                    document.getElementById('signupPhone').value = account.phone;
-                    document.getElementById('signupAddress').value = account.address;
-                    document.getElementById('signupCity').value = account.city;
-                }
-
-                this.showNotification(`Logged in as Google User: ${account.email}`);
+                this.showNotification(`Welcome, ${account.name}! Signed in with Google.`);
                 this.showHome();
             } catch (err) {
-                console.error("Google account simulation login failed:", err);
-                alert("Simulated Google account sign-in failed.");
+                console.error("Google Sign-In failed:", err);
+                this.showNotification('Google Sign-In failed. Please try again or use email/password.', 'error');
             }
         }
 
@@ -4518,54 +4422,63 @@
             });
         }
 
-        saveGoogleClientId() {
-            const val = document.getElementById('googleClientIdInput').value.trim();
-            if (!val) {
-                alert("Please enter a valid Client ID.");
-                return;
-            }
-            localStorage.setItem('googleClientId', val);
-            this.showNotification("Google Client ID saved!");
-            this.closeGoogleAuthSim();
-            this.initGoogleGSI();
-        }
-
         initGoogleGSI() {
-            const clientId = localStorage.getItem('googleClientId');
-            if (!clientId) {
-                console.log("No Google Client ID configured. Standard GIS buttons will not initialize.");
+            // ---------------------------------------------------------------
+            // PASTE YOUR GOOGLE OAUTH CLIENT ID BELOW (replace the placeholder)
+            // Example: '123456789-abc.apps.googleusercontent.com'
+            // ---------------------------------------------------------------
+            const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID_HERE';
+            // ---------------------------------------------------------------
+
+            if (!GOOGLE_CLIENT_ID || GOOGLE_CLIENT_ID === 'YOUR_GOOGLE_CLIENT_ID_HERE') {
+                console.warn('Google Sign-In: No Client ID configured. Buttons will not render.');
                 return;
             }
-            
-            // Set up input value in modal
-            const input = document.getElementById('googleClientIdInput');
-            if (input) input.value = clientId;
 
-            try {
+            const tryInit = () => {
                 if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
-                    google.accounts.id.initialize({
-                        client_id: clientId,
-                        callback: (response) => this.handleGoogleCredentialResponse(response)
-                    });
-                    
-                    const loginBtnDiv = document.getElementById('googleBtnDiv');
-                    if (loginBtnDiv) {
-                        google.accounts.id.renderButton(loginBtnDiv, { theme: 'outline', size: 'large', width: '100%' });
+                    try {
+                        google.accounts.id.initialize({
+                            client_id: GOOGLE_CLIENT_ID,
+                            callback: (response) => this.handleGoogleCredentialResponse(response),
+                            auto_select: false,
+                            cancel_on_tap_outside: true
+                        });
+
+                        const loginBtnDiv = document.getElementById('googleBtnDiv');
+                        if (loginBtnDiv) {
+                            google.accounts.id.renderButton(loginBtnDiv, {
+                                theme: 'outline',
+                                size: 'large',
+                                width: 320,
+                                text: 'signin_with',
+                                shape: 'rectangular',
+                                logo_alignment: 'left'
+                            });
+                        }
+
+                        const signupBtnDiv = document.getElementById('googleBtnDivSignup');
+                        if (signupBtnDiv) {
+                            google.accounts.id.renderButton(signupBtnDiv, {
+                                theme: 'outline',
+                                size: 'large',
+                                width: 320,
+                                text: 'signup_with',
+                                shape: 'rectangular',
+                                logo_alignment: 'left'
+                            });
+                        }
+
+                        console.log('Google Identity Services initialized.');
+                    } catch(e) {
+                        console.error('Failed to initialize Google Identity Services:', e);
                     }
-                    
-                    const signupBtnDiv = document.getElementById('googleBtnDivSignup');
-                    if (signupBtnDiv) {
-                        google.accounts.id.renderButton(signupBtnDiv, { theme: 'outline', size: 'large', width: '100%' });
-                    }
-                    
-                    console.log("Google Identity Services initialized successfully with configured Client ID.");
                 } else {
-                    console.log("Google Accounts script not loaded yet. Retrying in 1s...");
-                    setTimeout(() => this.initGoogleGSI(), 1000);
+                    // SDK not loaded yet — retry after 800ms
+                    setTimeout(tryInit, 800);
                 }
-            } catch(e) {
-                console.error("Failed to initialize Google Identity Services:", e);
-            }
+            };
+            tryInit();
         }
 
         handleGoogleCredentialResponse(response) {
