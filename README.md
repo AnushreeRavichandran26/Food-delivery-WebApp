@@ -1,5 +1,9 @@
 # 🍽️ Food Delivery WebApp
 
+
+🔗 **Live Demo:** [View Application](https://fooddelivery-ads-hzfehsbkb5h0dgcj.centralindia-01.azurewebsites.net/)
+
+
 A full-stack web application for online food ordering and delivery management built using Spring Boot and vanilla JavaScript.
 
 ---
