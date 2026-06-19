@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -35,6 +36,31 @@ public class UserController {
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body("Invalid email or password");
+    }
+
+    /**
+     * Dedicated Google Sign-In endpoint.
+     * Accepts: { email, name, googleName }
+     * Finds or creates the user by email (no password required).
+     * Trust is established by the Google Identity Services JWT verified on the client.
+     */
+    @PostMapping("/google-login")
+    public ResponseEntity<?> googleLogin(@RequestBody Map<String, String> payload) {
+        try {
+            String email = payload.get("email");
+            String name = payload.get("name");
+            String googleName = payload.getOrDefault("googleName", name);
+
+            if (email == null || email.isBlank()) {
+                return ResponseEntity.badRequest().body("Email is required for Google Sign-In");
+            }
+
+            User user = userService.googleLoginOrRegister(email, name, googleName);
+            return ResponseEntity.ok(user);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Google Sign-In failed: " + e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")

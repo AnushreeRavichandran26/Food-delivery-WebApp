@@ -43,10 +43,9 @@ public class UserService {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new RuntimeException("Email already exists");
         }
-        
-        // Google authentication simulation bypass check
-        boolean isGoogleSim = "GoogleAuthSimulatedPassword123!".equals(user.getPassword());
-        if (!isGoogleSim) {
+
+        // Skip OTP for Google-linked registrations
+        if (!user.isGoogleLinked()) {
             if (!otpService.isEmailVerified(user.getEmail())) {
                 throw new RuntimeException("Email verification via OTP is required before registration");
             }
@@ -56,9 +55,48 @@ public class UserService {
         if (user.getRole() == null || user.getRole().trim().isEmpty()) {
             user.setRole("CUSTOMER");
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        // Only encode password if one was supplied
+        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        } else {
+            user.setPassword(""); // Google users have no password
+        }
         user.setCreatedAt(LocalDateTime.now());
         return userRepository.save(user);
+    }
+
+    /**
+     * Google Sign-In: find-or-create a user by email.
+     * Trust is established by the Google JWT token verified client-side.
+     * No password is checked or stored for Google-linked accounts.
+     */
+    public User googleLoginOrRegister(String email, String name, String googleName) {
+        Optional<User> existing = userRepository.findByEmail(email);
+        if (existing.isPresent()) {
+            User user = existing.get();
+            // Link to Google if not already linked
+            if (!user.isGoogleLinked()) {
+                user.setGoogleLinked(true);
+                user.setGoogleName(googleName);
+                user.setUpdatedAt(LocalDateTime.now());
+                userRepository.save(user);
+            }
+            return user;
+        }
+
+        // New Google user — auto-register
+        User newUser = new User();
+        newUser.setName(name);
+        newUser.setEmail(email);
+        newUser.setGoogleLinked(true);
+        newUser.setGoogleName(googleName);
+        newUser.setPhone("");
+        newUser.setPassword(""); // No password for Google-only accounts
+        newUser.setRole("CUSTOMER");
+        newUser.setAddress("");
+        newUser.setCity("");
+        newUser.setCreatedAt(LocalDateTime.now());
+        return userRepository.save(newUser);
     }
 
     public Optional<User> loginUser(String email, String password) {

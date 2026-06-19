@@ -17,11 +17,18 @@ public class User {
     @Column(nullable = false, unique = true, length = 100)
     private String email;
 
-    @Column(nullable = false, length = 20)
+    @Column(length = 20)
     private String phone;
 
-    @Column(nullable = false, length = 255)
+    @Column(length = 255)
     private String password;
+
+    // Google Sign-In fields
+    @Column(name = "google_linked", nullable = false)
+    private boolean googleLinked = false;
+
+    @Column(name = "google_name", length = 150)
+    private String googleName;
 
     @Column(length = 255)
     private String address;
@@ -86,6 +93,12 @@ public class User {
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
 
+    public boolean isGoogleLinked() { return googleLinked; }
+    public void setGoogleLinked(boolean googleLinked) { this.googleLinked = googleLinked; }
+
+    public String getGoogleName() { return googleName; }
+    public void setGoogleName(String googleName) { this.googleName = googleName; }
+
     public String getAddress() { return address; }
     public void setAddress(String address) { this.address = address; }
 
@@ -104,3 +117,4 @@ public class User {
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 }
+

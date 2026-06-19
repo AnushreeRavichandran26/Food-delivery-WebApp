@@ -2209,29 +2209,15 @@
             }, 200);
         }
 
-        /* Google Sign-In: handles real credential response from Google Identity Services */
+        /* Google Sign-In: called with decoded Google JWT payload after real Google auth */
         async selectGoogleAccount(account) {
             try {
-                const signupData = {
+                // Single dedicated endpoint — handles new AND returning Google users.
+                // No password involved. Backend trusts the Google email from the JWT.
+                this.currentUser = await this.apiCall('/users/google-login', 'POST', {
+                    email: account.email,
                     name: account.name,
-                    email: account.email,
-                    phone: account.phone || "",
-                    address: account.address || "",
-                    city: account.city || "",
-                    password: "GoogleOAuth_" + btoa(account.email).replace(/=/g, '')
-                };
-
-                // Try registering first — silently ignore if account already exists
-                try {
-                    await this.apiCall('/users/register', 'POST', signupData);
-                } catch(e) {
-                    // Account already exists — proceed to login
-                }
-
-                // Login with the deterministic Google password
-                this.currentUser = await this.apiCall('/users/login', 'POST', {
-                    email: account.email,
-                    password: signupData.password
+                    googleName: account.name
                 });
 
                 localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
@@ -2240,10 +2226,11 @@
                 this.showNotification(`Welcome, ${account.name}! Signed in with Google.`);
                 this.showHome();
             } catch (err) {
-                console.error("Google Sign-In failed:", err);
-                this.showNotification('Google Sign-In failed. Please try again or use email/password.', 'error');
+                console.error('Google Sign-In failed:', err);
+                this.showNotification('Google Sign-In failed. Please try again or use email/password login.', 'error');
             }
         }
+
 
         /* Map Address Picker: Leaflet & Geocoding */
         initSignupMap() {
